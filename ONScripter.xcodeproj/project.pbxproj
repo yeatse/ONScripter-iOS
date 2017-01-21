@@ -7,9 +7,49 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		380C1F591E33901B00CA2A87 /* ONScripter.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1F571E33901B00CA2A87 /* ONScripter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		380C1F591E33901B00CA2A87 /* ONScripterIOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1F571E33901B00CA2A87 /* ONScripterIOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		380C1F711E339C6A00CA2A87 /* libSDL2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 380C1F6E1E339C2600CA2A87 /* libSDL2.a */; };
 		380C1F781E339CB200CA2A87 /* libSDL2_image.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 380C1F771E339CA500CA2A87 /* libSDL2_image.a */; };
+		380C1FCD1E33CC7F00CA2A87 /* AnimationInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1F9C1E33CC7F00CA2A87 /* AnimationInfo.cpp */; };
+		380C1FCE1E33CC7F00CA2A87 /* AnimationInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1F9D1E33CC7F00CA2A87 /* AnimationInfo.h */; };
+		380C1FD11E33CC7F00CA2A87 /* BaseReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1FA01E33CC7F00CA2A87 /* BaseReader.h */; };
+		380C1FD21E33CC7F00CA2A87 /* ButtonLink.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1FA11E33CC7F00CA2A87 /* ButtonLink.h */; };
+		380C1FD41E33CC7F00CA2A87 /* DirectReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FA31E33CC7F00CA2A87 /* DirectReader.cpp */; };
+		380C1FD51E33CC7F00CA2A87 /* DirectReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1FA41E33CC7F00CA2A87 /* DirectReader.h */; };
+		380C1FD61E33CC7F00CA2A87 /* DirtyRect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FA51E33CC7F00CA2A87 /* DirtyRect.cpp */; };
+		380C1FD71E33CC7F00CA2A87 /* DirtyRect.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1FA61E33CC7F00CA2A87 /* DirtyRect.h */; };
+		380C1FD81E33CC7F00CA2A87 /* FontInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FA71E33CC7F00CA2A87 /* FontInfo.cpp */; };
+		380C1FD91E33CC7F00CA2A87 /* FontInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1FA81E33CC7F00CA2A87 /* FontInfo.h */; };
+		380C1FDA1E33CC7F00CA2A87 /* LUAHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FA91E33CC7F00CA2A87 /* LUAHandler.cpp */; };
+		380C1FDB1E33CC7F00CA2A87 /* LUAHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1FAA1E33CC7F00CA2A87 /* LUAHandler.h */; };
+		380C1FDE1E33CC7F00CA2A87 /* NsaReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FAD1E33CC7F00CA2A87 /* NsaReader.cpp */; };
+		380C1FDF1E33CC7F00CA2A87 /* NsaReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1FAE1E33CC7F00CA2A87 /* NsaReader.h */; };
+		380C1FE11E33CC7F00CA2A87 /* ONScripter_animation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FB01E33CC7F00CA2A87 /* ONScripter_animation.cpp */; };
+		380C1FE21E33CC7F00CA2A87 /* ONScripter_command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FB11E33CC7F00CA2A87 /* ONScripter_command.cpp */; };
+		380C1FE31E33CC7F00CA2A87 /* ONScripter_effect_breakup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FB21E33CC7F00CA2A87 /* ONScripter_effect_breakup.cpp */; };
+		380C1FE41E33CC7F00CA2A87 /* ONScripter_effect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FB31E33CC7F00CA2A87 /* ONScripter_effect.cpp */; };
+		380C1FE51E33CC7F00CA2A87 /* ONScripter_event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FB41E33CC7F00CA2A87 /* ONScripter_event.cpp */; };
+		380C1FE61E33CC7F00CA2A87 /* ONScripter_file.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FB51E33CC7F00CA2A87 /* ONScripter_file.cpp */; };
+		380C1FE71E33CC7F00CA2A87 /* ONScripter_file2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FB61E33CC7F00CA2A87 /* ONScripter_file2.cpp */; };
+		380C1FE81E33CC7F00CA2A87 /* ONScripter_image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FB71E33CC7F00CA2A87 /* ONScripter_image.cpp */; };
+		380C1FE91E33CC7F00CA2A87 /* ONScripter_lut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FB81E33CC7F00CA2A87 /* ONScripter_lut.cpp */; };
+		380C1FEA1E33CC7F00CA2A87 /* onscripter_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FB91E33CC7F00CA2A87 /* onscripter_main.cpp */; };
+		380C1FEB1E33CC7F00CA2A87 /* ONScripter_rmenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FBA1E33CC7F00CA2A87 /* ONScripter_rmenu.cpp */; };
+		380C1FEC1E33CC7F00CA2A87 /* ONScripter_sound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FBB1E33CC7F00CA2A87 /* ONScripter_sound.cpp */; };
+		380C1FED1E33CC7F00CA2A87 /* ONScripter_text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FBC1E33CC7F00CA2A87 /* ONScripter_text.cpp */; };
+		380C1FEE1E33CC7F00CA2A87 /* ONScripter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FBD1E33CC7F00CA2A87 /* ONScripter.cpp */; };
+		380C1FEF1E33CC7F00CA2A87 /* ONScripter.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1FBE1E33CC7F00CA2A87 /* ONScripter.h */; };
+		380C1FF01E33CC7F00CA2A87 /* resize_image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FBF1E33CC7F00CA2A87 /* resize_image.cpp */; };
+		380C1FF11E33CC7F00CA2A87 /* resize_image.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1FC01E33CC7F00CA2A87 /* resize_image.h */; };
+		380C1FF41E33CC7F00CA2A87 /* SarReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FC31E33CC7F00CA2A87 /* SarReader.cpp */; };
+		380C1FF51E33CC7F00CA2A87 /* SarReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1FC41E33CC7F00CA2A87 /* SarReader.h */; };
+		380C1FF61E33CC7F00CA2A87 /* ScriptHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FC51E33CC7F00CA2A87 /* ScriptHandler.cpp */; };
+		380C1FF71E33CC7F00CA2A87 /* ScriptHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1FC61E33CC7F00CA2A87 /* ScriptHandler.h */; };
+		380C1FF81E33CC7F00CA2A87 /* ScriptParser_command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FC71E33CC7F00CA2A87 /* ScriptParser_command.cpp */; };
+		380C1FF91E33CC7F00CA2A87 /* ScriptParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FC81E33CC7F00CA2A87 /* ScriptParser.cpp */; };
+		380C1FFA1E33CC7F00CA2A87 /* ScriptParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1FC91E33CC7F00CA2A87 /* ScriptParser.h */; };
+		380C1FFC1E33CC7F00CA2A87 /* sjis2utf16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FCB1E33CC7F00CA2A87 /* sjis2utf16.cpp */; };
+		380C1FFD1E33CC7F00CA2A87 /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1FCC1E33CC7F00CA2A87 /* version.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,12 +92,52 @@
 
 /* Begin PBXFileReference section */
 		380C1F541E33901B00CA2A87 /* ONScripter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ONScripter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		380C1F571E33901B00CA2A87 /* ONScripter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ONScripter.h; sourceTree = "<group>"; };
+		380C1F571E33901B00CA2A87 /* ONScripterIOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ONScripterIOS.h; sourceTree = "<group>"; };
 		380C1F581E33901B00CA2A87 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		380C1F671E339C2600CA2A87 /* SDL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL.xcodeproj; path = "SDL2-2.0.5/Xcode-iOS/SDL/SDL.xcodeproj"; sourceTree = "<group>"; };
 		380C1F721E339CA500CA2A87 /* SDL_image.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL_image.xcodeproj; path = "SDL2_image-2.0.1/Xcode-iOS/SDL_image.xcodeproj"; sourceTree = SOURCE_ROOT; };
 		380C1F791E339CC400CA2A87 /* SDL_mixer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL_mixer.xcodeproj; path = "SDL2_mixer-2.0.1/Xcode-iOS/SDL_mixer.xcodeproj"; sourceTree = "<group>"; };
 		380C1F7F1E339CCE00CA2A87 /* SDL_ttf.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL_ttf.xcodeproj; path = "SDL2_ttf-2.0.14/Xcode-iOS/SDL_ttf.xcodeproj"; sourceTree = "<group>"; };
+		380C1F9C1E33CC7F00CA2A87 /* AnimationInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationInfo.cpp; sourceTree = "<group>"; };
+		380C1F9D1E33CC7F00CA2A87 /* AnimationInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationInfo.h; sourceTree = "<group>"; };
+		380C1FA01E33CC7F00CA2A87 /* BaseReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseReader.h; sourceTree = "<group>"; };
+		380C1FA11E33CC7F00CA2A87 /* ButtonLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonLink.h; sourceTree = "<group>"; };
+		380C1FA31E33CC7F00CA2A87 /* DirectReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DirectReader.cpp; sourceTree = "<group>"; };
+		380C1FA41E33CC7F00CA2A87 /* DirectReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectReader.h; sourceTree = "<group>"; };
+		380C1FA51E33CC7F00CA2A87 /* DirtyRect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DirtyRect.cpp; sourceTree = "<group>"; };
+		380C1FA61E33CC7F00CA2A87 /* DirtyRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirtyRect.h; sourceTree = "<group>"; };
+		380C1FA71E33CC7F00CA2A87 /* FontInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FontInfo.cpp; sourceTree = "<group>"; };
+		380C1FA81E33CC7F00CA2A87 /* FontInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontInfo.h; sourceTree = "<group>"; };
+		380C1FA91E33CC7F00CA2A87 /* LUAHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LUAHandler.cpp; sourceTree = "<group>"; };
+		380C1FAA1E33CC7F00CA2A87 /* LUAHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LUAHandler.h; sourceTree = "<group>"; };
+		380C1FAD1E33CC7F00CA2A87 /* NsaReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NsaReader.cpp; sourceTree = "<group>"; };
+		380C1FAE1E33CC7F00CA2A87 /* NsaReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NsaReader.h; sourceTree = "<group>"; };
+		380C1FB01E33CC7F00CA2A87 /* ONScripter_animation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter_animation.cpp; sourceTree = "<group>"; };
+		380C1FB11E33CC7F00CA2A87 /* ONScripter_command.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter_command.cpp; sourceTree = "<group>"; };
+		380C1FB21E33CC7F00CA2A87 /* ONScripter_effect_breakup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter_effect_breakup.cpp; sourceTree = "<group>"; };
+		380C1FB31E33CC7F00CA2A87 /* ONScripter_effect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter_effect.cpp; sourceTree = "<group>"; };
+		380C1FB41E33CC7F00CA2A87 /* ONScripter_event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter_event.cpp; sourceTree = "<group>"; };
+		380C1FB51E33CC7F00CA2A87 /* ONScripter_file.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter_file.cpp; sourceTree = "<group>"; };
+		380C1FB61E33CC7F00CA2A87 /* ONScripter_file2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter_file2.cpp; sourceTree = "<group>"; };
+		380C1FB71E33CC7F00CA2A87 /* ONScripter_image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter_image.cpp; sourceTree = "<group>"; };
+		380C1FB81E33CC7F00CA2A87 /* ONScripter_lut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter_lut.cpp; sourceTree = "<group>"; };
+		380C1FB91E33CC7F00CA2A87 /* onscripter_main.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = onscripter_main.cpp; sourceTree = "<group>"; };
+		380C1FBA1E33CC7F00CA2A87 /* ONScripter_rmenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter_rmenu.cpp; sourceTree = "<group>"; };
+		380C1FBB1E33CC7F00CA2A87 /* ONScripter_sound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter_sound.cpp; sourceTree = "<group>"; };
+		380C1FBC1E33CC7F00CA2A87 /* ONScripter_text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter_text.cpp; sourceTree = "<group>"; };
+		380C1FBD1E33CC7F00CA2A87 /* ONScripter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter.cpp; sourceTree = "<group>"; };
+		380C1FBE1E33CC7F00CA2A87 /* ONScripter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ONScripter.h; sourceTree = "<group>"; };
+		380C1FBF1E33CC7F00CA2A87 /* resize_image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = resize_image.cpp; sourceTree = "<group>"; };
+		380C1FC01E33CC7F00CA2A87 /* resize_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = resize_image.h; sourceTree = "<group>"; };
+		380C1FC31E33CC7F00CA2A87 /* SarReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SarReader.cpp; sourceTree = "<group>"; };
+		380C1FC41E33CC7F00CA2A87 /* SarReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SarReader.h; sourceTree = "<group>"; };
+		380C1FC51E33CC7F00CA2A87 /* ScriptHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptHandler.cpp; sourceTree = "<group>"; };
+		380C1FC61E33CC7F00CA2A87 /* ScriptHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptHandler.h; sourceTree = "<group>"; };
+		380C1FC71E33CC7F00CA2A87 /* ScriptParser_command.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptParser_command.cpp; sourceTree = "<group>"; };
+		380C1FC81E33CC7F00CA2A87 /* ScriptParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptParser.cpp; sourceTree = "<group>"; };
+		380C1FC91E33CC7F00CA2A87 /* ScriptParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptParser.h; sourceTree = "<group>"; };
+		380C1FCB1E33CC7F00CA2A87 /* sjis2utf16.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sjis2utf16.cpp; sourceTree = "<group>"; };
+		380C1FCC1E33CC7F00CA2A87 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +162,7 @@
 				380C1F791E339CC400CA2A87 /* SDL_mixer.xcodeproj */,
 				380C1F7F1E339CCE00CA2A87 /* SDL_ttf.xcodeproj */,
 				380C1F551E33901B00CA2A87 /* Products */,
+				380C1F931E33C8AB00CA2A87 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -96,7 +177,47 @@
 		380C1F561E33901B00CA2A87 /* ONScripter */ = {
 			isa = PBXGroup;
 			children = (
-				380C1F571E33901B00CA2A87 /* ONScripter.h */,
+				380C1F571E33901B00CA2A87 /* ONScripterIOS.h */,
+				380C1F9C1E33CC7F00CA2A87 /* AnimationInfo.cpp */,
+				380C1F9D1E33CC7F00CA2A87 /* AnimationInfo.h */,
+				380C1FA01E33CC7F00CA2A87 /* BaseReader.h */,
+				380C1FA11E33CC7F00CA2A87 /* ButtonLink.h */,
+				380C1FA31E33CC7F00CA2A87 /* DirectReader.cpp */,
+				380C1FA41E33CC7F00CA2A87 /* DirectReader.h */,
+				380C1FA51E33CC7F00CA2A87 /* DirtyRect.cpp */,
+				380C1FA61E33CC7F00CA2A87 /* DirtyRect.h */,
+				380C1FA71E33CC7F00CA2A87 /* FontInfo.cpp */,
+				380C1FA81E33CC7F00CA2A87 /* FontInfo.h */,
+				380C1FA91E33CC7F00CA2A87 /* LUAHandler.cpp */,
+				380C1FAA1E33CC7F00CA2A87 /* LUAHandler.h */,
+				380C1FAD1E33CC7F00CA2A87 /* NsaReader.cpp */,
+				380C1FAE1E33CC7F00CA2A87 /* NsaReader.h */,
+				380C1FB01E33CC7F00CA2A87 /* ONScripter_animation.cpp */,
+				380C1FB11E33CC7F00CA2A87 /* ONScripter_command.cpp */,
+				380C1FB21E33CC7F00CA2A87 /* ONScripter_effect_breakup.cpp */,
+				380C1FB31E33CC7F00CA2A87 /* ONScripter_effect.cpp */,
+				380C1FB41E33CC7F00CA2A87 /* ONScripter_event.cpp */,
+				380C1FB51E33CC7F00CA2A87 /* ONScripter_file.cpp */,
+				380C1FB61E33CC7F00CA2A87 /* ONScripter_file2.cpp */,
+				380C1FB71E33CC7F00CA2A87 /* ONScripter_image.cpp */,
+				380C1FB81E33CC7F00CA2A87 /* ONScripter_lut.cpp */,
+				380C1FB91E33CC7F00CA2A87 /* onscripter_main.cpp */,
+				380C1FBA1E33CC7F00CA2A87 /* ONScripter_rmenu.cpp */,
+				380C1FBB1E33CC7F00CA2A87 /* ONScripter_sound.cpp */,
+				380C1FBC1E33CC7F00CA2A87 /* ONScripter_text.cpp */,
+				380C1FBD1E33CC7F00CA2A87 /* ONScripter.cpp */,
+				380C1FBE1E33CC7F00CA2A87 /* ONScripter.h */,
+				380C1FBF1E33CC7F00CA2A87 /* resize_image.cpp */,
+				380C1FC01E33CC7F00CA2A87 /* resize_image.h */,
+				380C1FC31E33CC7F00CA2A87 /* SarReader.cpp */,
+				380C1FC41E33CC7F00CA2A87 /* SarReader.h */,
+				380C1FC51E33CC7F00CA2A87 /* ScriptHandler.cpp */,
+				380C1FC61E33CC7F00CA2A87 /* ScriptHandler.h */,
+				380C1FC71E33CC7F00CA2A87 /* ScriptParser_command.cpp */,
+				380C1FC81E33CC7F00CA2A87 /* ScriptParser.cpp */,
+				380C1FC91E33CC7F00CA2A87 /* ScriptParser.h */,
+				380C1FCB1E33CC7F00CA2A87 /* sjis2utf16.cpp */,
+				380C1FCC1E33CC7F00CA2A87 /* version.h */,
 				380C1F581E33901B00CA2A87 /* Info.plist */,
 			);
 			path = ONScripter;
@@ -135,6 +256,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		380C1F931E33C8AB00CA2A87 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -142,7 +270,21 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				380C1F591E33901B00CA2A87 /* ONScripter.h in Headers */,
+				380C1FF11E33CC7F00CA2A87 /* resize_image.h in Headers */,
+				380C1FD11E33CC7F00CA2A87 /* BaseReader.h in Headers */,
+				380C1FF71E33CC7F00CA2A87 /* ScriptHandler.h in Headers */,
+				380C1F591E33901B00CA2A87 /* ONScripterIOS.h in Headers */,
+				380C1FFD1E33CC7F00CA2A87 /* version.h in Headers */,
+				380C1FD91E33CC7F00CA2A87 /* FontInfo.h in Headers */,
+				380C1FDB1E33CC7F00CA2A87 /* LUAHandler.h in Headers */,
+				380C1FD71E33CC7F00CA2A87 /* DirtyRect.h in Headers */,
+				380C1FDF1E33CC7F00CA2A87 /* NsaReader.h in Headers */,
+				380C1FCE1E33CC7F00CA2A87 /* AnimationInfo.h in Headers */,
+				380C1FD51E33CC7F00CA2A87 /* DirectReader.h in Headers */,
+				380C1FF51E33CC7F00CA2A87 /* SarReader.h in Headers */,
+				380C1FEF1E33CC7F00CA2A87 /* ONScripter.h in Headers */,
+				380C1FD21E33CC7F00CA2A87 /* ButtonLink.h in Headers */,
+				380C1FFA1E33CC7F00CA2A87 /* ScriptParser.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,6 +412,32 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				380C1FE81E33CC7F00CA2A87 /* ONScripter_image.cpp in Sources */,
+				380C1FD61E33CC7F00CA2A87 /* DirtyRect.cpp in Sources */,
+				380C1FF41E33CC7F00CA2A87 /* SarReader.cpp in Sources */,
+				380C1FF91E33CC7F00CA2A87 /* ScriptParser.cpp in Sources */,
+				380C1FEE1E33CC7F00CA2A87 /* ONScripter.cpp in Sources */,
+				380C1FE41E33CC7F00CA2A87 /* ONScripter_effect.cpp in Sources */,
+				380C1FFC1E33CC7F00CA2A87 /* sjis2utf16.cpp in Sources */,
+				380C1FE61E33CC7F00CA2A87 /* ONScripter_file.cpp in Sources */,
+				380C1FD81E33CC7F00CA2A87 /* FontInfo.cpp in Sources */,
+				380C1FDA1E33CC7F00CA2A87 /* LUAHandler.cpp in Sources */,
+				380C1FE21E33CC7F00CA2A87 /* ONScripter_command.cpp in Sources */,
+				380C1FE31E33CC7F00CA2A87 /* ONScripter_effect_breakup.cpp in Sources */,
+				380C1FF01E33CC7F00CA2A87 /* resize_image.cpp in Sources */,
+				380C1FCD1E33CC7F00CA2A87 /* AnimationInfo.cpp in Sources */,
+				380C1FE91E33CC7F00CA2A87 /* ONScripter_lut.cpp in Sources */,
+				380C1FEA1E33CC7F00CA2A87 /* onscripter_main.cpp in Sources */,
+				380C1FEB1E33CC7F00CA2A87 /* ONScripter_rmenu.cpp in Sources */,
+				380C1FED1E33CC7F00CA2A87 /* ONScripter_text.cpp in Sources */,
+				380C1FF61E33CC7F00CA2A87 /* ScriptHandler.cpp in Sources */,
+				380C1FE11E33CC7F00CA2A87 /* ONScripter_animation.cpp in Sources */,
+				380C1FEC1E33CC7F00CA2A87 /* ONScripter_sound.cpp in Sources */,
+				380C1FF81E33CC7F00CA2A87 /* ScriptParser_command.cpp in Sources */,
+				380C1FD41E33CC7F00CA2A87 /* DirectReader.cpp in Sources */,
+				380C1FE71E33CC7F00CA2A87 /* ONScripter_file2.cpp in Sources */,
+				380C1FDE1E33CC7F00CA2A87 /* NsaReader.cpp in Sources */,
+				380C1FE51E33CC7F00CA2A87 /* ONScripter_event.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -380,9 +548,33 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					IOS,
+					UTF8_FILESYSTEM,
+					USE_LUA,
+					USE_SMPEG,
+					MP3_MAD,
+					PDA_AUTOSIZE,
+					USE_SDL_RENDERER,
+					HAVE_CONTENTS,
+					RENDER_FONT_OUTLINE,
+					"MAGIC_FILE=\\\".20120310\\\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/SDL/include",
+					"$(SRCROOT)/SDL_image",
+					"$(SRCROOT)/SDL_mixer",
+					"$(SRCROOT)/SDL_ttf",
+					"$(SRCROOT)/Release$(EFFECTIVE_PLATFORM_NAME)/include",
+				);
 				INFOPLIST_FILE = ONScripter/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Release-iphonesimulator/lib",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yeatse.ONScripter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -397,9 +589,33 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					IOS,
+					UTF8_FILESYSTEM,
+					USE_LUA,
+					USE_SMPEG,
+					MP3_MAD,
+					PDA_AUTOSIZE,
+					USE_SDL_RENDERER,
+					HAVE_CONTENTS,
+					RENDER_FONT_OUTLINE,
+					"MAGIC_FILE=\\\".20120310\\\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/SDL/include",
+					"$(SRCROOT)/SDL_image",
+					"$(SRCROOT)/SDL_mixer",
+					"$(SRCROOT)/SDL_ttf",
+					"$(SRCROOT)/Release$(EFFECTIVE_PLATFORM_NAME)/include",
+				);
 				INFOPLIST_FILE = ONScripter/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Release-iphonesimulator/lib",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yeatse.ONScripter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
