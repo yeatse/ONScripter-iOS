@@ -425,6 +425,7 @@
 				380C1F5E1E33901B00CA2A87 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
