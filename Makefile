@@ -22,9 +22,9 @@ $(INSTALL_PATH)/lib/libogg.a:
 	make -C libogg install
 
 $(INSTALL_PATH)/lib/libvorbisidec.a:
-	cd tremor; ./autogen.sh CC=$(SDK_CC) CFLAGS="$(SDK_CFLAGS) -isysroot $(SDK_PATH)" SDL_CFLAGS="-isysroot $(SDK_PATH)" OGG_CFLAGS="-I$(INSTALL_PATH)/include" OGG_LIBS="-L$(INSTALL_PATH)/lib" --host=$(HOST) --disable-shared --prefix=$(INSTALL_PATH)
-	make -C tremor
-	make -C tremor install
+	cd libvorbisidec; ./autogen.sh CC=$(SDK_CC) CFLAGS="$(SDK_CFLAGS) -isysroot $(SDK_PATH)" SDL_CFLAGS="-isysroot $(SDK_PATH)" OGG_CFLAGS="-I$(INSTALL_PATH)/include" OGG_LIBS="-L$(INSTALL_PATH)/lib" --host=$(HOST) --disable-shared --prefix=$(INSTALL_PATH)
+	make -C libvorbisidec
+	make -C libvorbisidec install
 
 $(INSTALL_PATH)/lib/liblua.a:
 	make -C lua macosx CC=$(SDK_CC) CFLAGS="$(SDK_CFLAGS) -isysroot $(SDK_PATH)" INSTALL_TOP=$(INSTALL_PATH)
@@ -38,9 +38,9 @@ clean:
 	make -C freetype clean
 	make -C libmad clean
 	make -C libogg clean
-	make -C tremor clean
+	make -C libvorbisidec clean
 	make -C lua clean
-	make -C tremor -f Makefile.ons clean
+	make -C libsmpeg -f Makefile.ons clean
 	-rm $(INSTALL_PATH)/lib/libfreetype.a
 	-rm $(INSTALL_PATH)/lib/libmad.a
 	-rm $(INSTALL_PATH)/lib/libogg.a

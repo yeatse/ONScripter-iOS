@@ -1,0 +1,57 @@
+.SUFFIXES:
+.SUFFIXES: .S .c .cpp .lo .o .s
+all: libsmpeg.a
+
+AR= ar rcu
+RANLIB= ranlib
+
+INSTALL_INC= $(INSTALL_TOP)/include
+INSTALL_LIB= $(INSTALL_TOP)/lib
+
+INSTALL= install -p
+INSTALL_DATA= $(INSTALL) -m 0644
+
+ONS_CFLAGS = -O3 -I. -I../../SDL/include $(CFLAGS) -DNOCONTROLS $(SDL_CFLAGS)
+
+TO_INC= smpeg.h MPEGframe.h
+TO_LIB= libsmpeg.a
+
+OBJS = MPEG.o MPEGring.o MPEGlist.o MPEGstream.o MPEGsystem.o smpeg.o \
+	video/MPEGvideo.o \
+	video/decoders.o \
+	video/floatdct.o \
+	video/gdith.o \
+	video/jrevdct.o \
+	video/motionvec.o \
+	video/parseblock.o \
+	video/readfile.o \
+	video/util.o \
+	video/video.o \
+	audio/MPEGaudio.o \
+	audio/bitwindow.o \
+	audio/filter.o \
+	audio/filter_2.o \
+	audio/hufftable.o \
+	audio/mpeglayer1.o \
+	audio/mpeglayer2.o \
+	audio/mpeglayer3.o \
+	audio/mpegtable.o \
+	audio/mpegtoraw.o
+
+.cpp.o:
+	$(CC) $(ONS_CFLAGS) -o$@ -c $<
+
+.c.o:
+	$(CC) $(ONS_CFLAGS) -o$@ -c $<
+
+libsmpeg.a: $(OBJS)
+	$(AR) $@ $(OBJS)
+	$(RANLIB) $@
+
+install:
+	$(INSTALL_DATA) $(TO_INC) $(INSTALL_INC)
+	$(INSTALL_DATA) $(TO_LIB) $(INSTALL_LIB)
+
+clean:
+	-rm $(OBJS)
+	-rm libsmpeg.a
