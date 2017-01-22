@@ -1552,7 +1552,7 @@ int ONScripter::movemousecursorCommand()
     x = x * screen_device_width / screen_width;
     y = y * screen_device_width / screen_width;
 
-    SDL_WarpMouse(x, y);
+    SDL_WarpMouseInWindow(window, x, y);
     
     return RET_CONTINUE;
 }
@@ -1581,37 +1581,13 @@ int ONScripter::monocroCommand()
 
 int ONScripter::menu_windowCommand()
 {
-    if ( fullscreen_mode ){
-#if !defined(PSP)
-        if ( !SDL_WM_ToggleFullScreen( screen_surface ) ){
-            screen_surface = SDL_SetVideoMode( screen_device_width, screen_device_height, screen_bpp, DEFAULT_VIDEO_SURFACE_FLAG );
-#ifdef ANDROID
-            SDL_SetSurfaceBlendMode(screen_surface, SDL_BLENDMODE_NONE);
-#endif            
-            flushDirect( screen_rect, refreshMode() );
-        }
-#endif
-        fullscreen_mode = false;
-    }
-
+    setFullScreen(false);
     return RET_CONTINUE;
 }
 
 int ONScripter::menu_fullCommand()
 {
-    if ( !fullscreen_mode ){
-#if !defined(PSP)
-        if ( !SDL_WM_ToggleFullScreen( screen_surface ) ){
-            screen_surface = SDL_SetVideoMode( screen_device_width, screen_device_height, screen_bpp, DEFAULT_VIDEO_SURFACE_FLAG|SDL_FULLSCREEN );
-#ifdef ANDROID
-            SDL_SetSurfaceBlendMode(screen_surface, SDL_BLENDMODE_NONE);
-#endif            
-            flushDirect( screen_rect, refreshMode() );
-        }
-#endif
-        fullscreen_mode = true;
-    }
-
+    setFullScreen(true);
     return RET_CONTINUE;
 }
 
@@ -1962,25 +1938,6 @@ int ONScripter::ldCommand()
 
     return RET_CONTINUE;
 }
-#if defined(USE_SMPEG)
-static void smpeg_filter_callback( SDL_Overlay * dst, SDL_Overlay * src, SDL_Rect * region, SMPEG_FilterInfo * filter_info, void * data )
-{
-    if (dst){
-        dst->w = 0;
-        dst->h = 0;
-    }
-
-    ONScripter *ons = (ONScripter*)data;
-    AnimationInfo *ai = ons->getSMPEGInfo();
-    if (!ai) return;
-
-    ai->convertFromYUV(src);
-}
-
-static void smpeg_filter_destroy( struct SMPEG_Filter * filter )
-{
-}
-#endif
 
 int ONScripter::layermessageCommand()
 {
@@ -2003,7 +1960,7 @@ int ONScripter::layermessageCommand()
             layer_smpeg_buffer = new unsigned char[length];
             script_h.cBR->getFile( buf+5, layer_smpeg_buffer );
 
-            layer_smpeg_sample = SMPEG_new_rwops( SDL_RWFromMem( layer_smpeg_buffer, length ), NULL, 0 );
+            layer_smpeg_sample = SMPEG_new_rwops(SDL_RWFromMem(layer_smpeg_buffer, length), NULL, SDL_TRUE, 0);
 
             if ( SMPEG_error( layer_smpeg_sample ) ) return RET_CONTINUE;
 
@@ -2011,17 +1968,13 @@ int ONScripter::layermessageCommand()
             SMPEG_enablevideo( layer_smpeg_sample, 1 );
 #ifdef USE_SDL_RENDERER
             // workaround to set a non-NULL value in the second argument
-            SMPEG_setdisplay( layer_smpeg_sample, accumulation_surface, NULL,  NULL);
+            SMPEG_setdisplay(layer_smpeg_sample, NULL, NULL, NULL);
 #else
             SMPEG_setdisplay( layer_smpeg_sample, screen_surface, NULL,  NULL);
 #endif            
         }
         else if (strcmp(buf, "play") == 0){
             smpeg_info->visible = true;
-            layer_smpeg_filter.data = this;
-            layer_smpeg_filter.callback = smpeg_filter_callback;
-            layer_smpeg_filter.destroy = smpeg_filter_destroy;
-            SMPEG_filter( layer_smpeg_sample, &layer_smpeg_filter );
             SMPEG_loop( layer_smpeg_sample, layer_smpeg_loop_flag?1:0);
             SMPEG_renderFrame( layer_smpeg_sample, 1 );
             SMPEG_play( layer_smpeg_sample );
@@ -3356,11 +3309,9 @@ int ONScripter::captionCommand()
 #endif
     
     setStr( &wm_title_string, buf2 );
-    setStr( &wm_icon_string,  buf2 );
     delete[] buf2;
     
-    SDL_WM_SetCaption( wm_title_string, wm_icon_string );
-
+    SDL_SetWindowTitle(window, wm_title_string);
     return RET_CONTINUE;
 }
 
@@ -3565,7 +3516,7 @@ int ONScripter::btndefCommand()
             parseTaggedString( &btndef_info );
             btndef_info.trans_mode = AnimationInfo::TRANS_COPY;
             setupAnimationInfo( &btndef_info );
-            SDL_SetAlpha( btndef_info.image_surface, DEFAULT_BLIT_FLAG, SDL_ALPHA_OPAQUE );
+            SDL_SetSurfaceBlendMode(btndef_info.image_surface, SDL_BLENDMODE_NONE);
         }
     }
     

@@ -84,7 +84,7 @@ int ONScripter::playSound(const char *filename, int format, bool loop_flag, int 
     }
     
     if (format & SOUND_MUSIC){
-        music_info = Mix_LoadMUS_RW( SDL_RWFromMem( buffer, length ) );
+        music_info = Mix_LoadMUS_RW(SDL_RWFromMem(buffer, length), SDL_FALSE);
         Mix_VolumeMusic( music_volume );
         Mix_HookMusicFinished( musicFinishCallback );
         if ( Mix_PlayMusic( music_info, (music_play_loop_flag&&music_loopback_offset==0.0)?-1:0 ) == 0 ){
@@ -196,31 +196,6 @@ int ONScripter::playMIDI(bool loop_flag)
     return 0;
 }
 
-#if defined(USE_SMPEG) && defined(USE_SDL_RENDERER)
-struct OverlayInfo{
-    SDL_Overlay overlay;
-    SDL_mutex *mutex;
-};
-static void smpeg_filter_callback( SDL_Overlay * dst, SDL_Overlay * src, SDL_Rect * region, SMPEG_FilterInfo * filter_info, void * data )
-{
-    if (dst){
-        dst->w = 0;
-        dst->h = 0;
-    }
-
-    OverlayInfo *oi = (OverlayInfo*)data;
-
-    SDL_mutexP(oi->mutex);
-    memcpy(oi->overlay.pixels[0], src->pixels[0],
-           oi->overlay.w*oi->overlay.h + (oi->overlay.w/2)*(oi->overlay.h/2)*2);
-    SDL_mutexV(oi->mutex);
-}
-
-static void smpeg_filter_destroy( struct SMPEG_Filter * filter )
-{
-}
-#endif
-
 int ONScripter::playMPEG(const char *filename, bool click_flag, bool loop_flag)
 {
     unsigned long length = script_h.cBR->getFileLength( filename );
@@ -247,7 +222,7 @@ int ONScripter::playMPEG(const char *filename, bool click_flag, bool loop_flag)
     layer_smpeg_buffer = new unsigned char[length];
     script_h.cBR->getFile( filename, layer_smpeg_buffer );
     SMPEG_Info info;
-    layer_smpeg_sample = SMPEG_new_rwops( SDL_RWFromMem( layer_smpeg_buffer, length ), &info, 0 );
+    layer_smpeg_sample = SMPEG_new_rwops(SDL_RWFromMem(layer_smpeg_buffer, length), &info, SDL_TRUE, 0);
     if (SMPEG_error( layer_smpeg_sample )){
         stopSMPEG();
         return ret;
@@ -271,32 +246,9 @@ int ONScripter::playMPEG(const char *filename, bool click_flag, bool loop_flag)
     SMPEG_enablevideo( layer_smpeg_sample, 1 );
     
 #if defined(USE_SDL_RENDERER)
-    SMPEG_setdisplay( layer_smpeg_sample, accumulation_surface, NULL,  NULL );
-
-    OverlayInfo oi;
-    Uint16 pitches[3];
-    Uint8 *pixels[3];
-    oi.overlay.format = SDL_YV12_OVERLAY;
-    oi.overlay.w = info.width;
-    oi.overlay.h = info.height;
-    oi.overlay.planes = 3;
-    pitches[0] = info.width;
-    pitches[1] = info.width/2;
-    pitches[2] = info.width/2;
-    oi.overlay.pitches = pitches;
-    Uint8 *pixel_buf = new Uint8[info.width*info.height + (info.width/2)*(info.height/2)*2];
-    pixels[0] = pixel_buf;
-    pixels[1] = pixel_buf + info.width*info.height;
-    pixels[2] = pixel_buf + info.width*info.height + (info.width/2)*(info.height/2);
-    oi.overlay.pixels = pixels;
-    oi.mutex = SDL_CreateMutex();
-
+    SMPEG_setdisplay(layer_smpeg_sample, NULL, NULL, NULL);
+    SDL_mutex *mutex = SDL_CreateMutex();
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_TARGET, info.width, info.height);
-
-    layer_smpeg_filter.data = &oi;
-    layer_smpeg_filter.callback = smpeg_filter_callback;
-    layer_smpeg_filter.destroy = smpeg_filter_destroy;
-    SMPEG_filter( layer_smpeg_sample, &layer_smpeg_filter );
 #else
     SMPEG_setdisplay( layer_smpeg_sample, screen_surface, NULL,  NULL );
 #endif
@@ -334,9 +286,9 @@ int ONScripter::playMPEG(const char *filename, bool click_flag, bool loop_flag)
         }
         
 #if defined(USE_SDL_RENDERER)
-        SDL_mutexP(oi.mutex);
-        flushDirectYUV(&oi.overlay);
-        SDL_mutexV(oi.mutex);
+        SDL_mutexP(mutex);
+        flushDirectYUV(&info);
+        SDL_mutexP(mutex);
 #endif
         SDL_Delay( 1 );
     }
@@ -345,8 +297,7 @@ int ONScripter::playMPEG(const char *filename, bool click_flag, bool loop_flag)
     Mix_HookMusic( NULL, NULL );
     openAudio();
 #if defined(USE_SDL_RENDERER)
-    delete[] pixel_buf;
-    SDL_DestroyMutex(oi.mutex);
+    SDL_DestroyMutex(mutex);
     texture = SDL_CreateTextureFromSurface(renderer, accumulation_surface);
 #endif
 #elif !defined(IOS)

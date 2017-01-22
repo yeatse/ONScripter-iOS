@@ -759,7 +759,6 @@ SDL_Surface *AnimationInfo::allocSurface( int w, int h, Uint32 texture_format )
     else // texture_format == SDL_PIXELFORMAT_ARGB8888
         surface = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
 
-    SDL_SetAlpha(surface, 0, SDL_ALPHA_OPAQUE);
 #if defined(USE_SDL_RENDERER) || defined(ANDROID)
     SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_NONE);
 #endif
@@ -1051,56 +1050,4 @@ unsigned char AnimationInfo::getAlpha(int x, int y)
 #endif
 
     return alpha;
-}
-
-void AnimationInfo::convertFromYUV(SDL_Overlay *src)
-{
-    SDL_mutexP(mutex);
-    if (!image_surface){
-        SDL_mutexV(mutex);
-        return;
-    }
-    
-    SDL_Surface *ls = image_surface;
-
-    SDL_LockSurface(ls);
-    SDL_PixelFormat *fmt = ls->format;
-    for (int i=0 ; i<ls->h ; i++){
-        int i2 = src->h*i/ls->h;
-        int i3 = (src->h/2)*i/ls->h;
-        Uint8 *y = src->pixels[0]+src->pitches[0]*i2;
-        Uint8 *v = src->pixels[1]+src->pitches[1]*i3;
-        Uint8 *u = src->pixels[2]+src->pitches[2]*i3;
-        ONSBuf *p = (ONSBuf*)ls->pixels + (ls->pitch/sizeof(ONSBuf))*i;
-        
-        for (int j=0 ; j<ls->w ; j++){
-            int j2 = src->w*j/ls->w;
-            int j3 = (src->w/2)*j/ls->w;
-
-            Sint32 y2 = *(y+j2);
-            Sint32 u2 = *(u+j3)-128;
-            Sint32 v2 = *(v+j3)-128;
-
-            //Sint32 r = 1.0*y2            + 1.402*v2;
-            //Sint32 g = 1.0*y2 - 0.344*u2 - 0.714*v2;
-            //Sint32 b = 1.0*y2 + 1.772*u2;
-            y2 <<= 10;
-            Sint32 r = y2           + 1436*v2;
-            Sint32 g = y2 -  352*u2 -  731*v2;
-            Sint32 b = y2 + 1815*u2;
-
-            if (r < 0) r = 0;
-            if (g < 0) g = 0;
-            if (b < 0) b = 0;
-
-            *(p+j) =
-                (((r >> (10+fmt->Rloss)) & 0xff) << fmt->Rshift) |
-                (((g >> (10+fmt->Gloss)) & 0xff) << fmt->Gshift) |
-                (((b >> (10+fmt->Bloss)) & 0xff) << fmt->Bshift) |
-                AMASK;
-        }
-    }
-    SDL_UnlockSurface(ls);
-
-    SDL_mutexV(mutex);
 }

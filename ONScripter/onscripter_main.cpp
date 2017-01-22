@@ -29,10 +29,10 @@ ONScripter ons;
 #if defined(IOS)
 #import <Foundation/NSArray.h>
 #import <UIKit/UIKit.h>
-#import "DataCopier.h"
-#import "DataDownloader.h"
-#import "ScriptSelector.h"
-#import "MoviePlayer.h"
+//#import "DataCopier.h"
+//#import "DataDownloader.h"
+//#import "ScriptSelector.h"
+//#import "MoviePlayer.h"
 #endif
 
 #if defined(PSP)
@@ -209,9 +209,9 @@ FILE *fopen_ons(const char *path, const char *mode)
 extern "C" void playVideoIOS(const char *filename, bool click_flag, bool loop_flag)
 {
     NSString *str = [[NSString alloc] initWithUTF8String:filename];
-    id obj = [MoviePlayer alloc];
-    [[obj init] play:str click:click_flag loop:loop_flag];
-    [obj release];
+//    id obj = [MoviePlayer alloc];
+//    [[obj init] play:str click:click_flag loop:loop_flag];
+//    [obj release];
 }
 #endif
 
@@ -248,7 +248,7 @@ int main( int argc, char **argv )
 
 #if defined(IOS)
 #if defined(HAVE_CONTENTS)
-    if ([[[DataCopier alloc] init] copy]) exit(-1);
+//    if ([[[DataCopier alloc] init] copy]) exit(-1);
 #endif
 
     // scripts and archives are stored under /Library/Caches

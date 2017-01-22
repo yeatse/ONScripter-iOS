@@ -321,7 +321,6 @@ private:
 
     bool is_script_read;
     char *wm_title_string;
-    char *wm_icon_string;
     char wm_edit_string[256];
     bool fullscreen_mode;
     bool window_mode;
@@ -394,14 +393,18 @@ private:
     int  shortcut_mouse_line;
 
     void initSDL();
+    void calcRenderRect();
     void openAudio(int freq=-1);
     void reset(); // called on definereset
     void resetSub(); // called on reset
     void resetSentenceFont();
     void flush( int refresh_mode, SDL_Rect *rect=NULL, bool clear_dirty_flag=true, bool direct_flag=false );
     void flushDirect( SDL_Rect &rect, int refresh_mode );
-    void flushDirectYUV(SDL_Overlay *overlay);
     void mouseOverCheck( int x, int y );
+#if defined(USE_SMPEG) && defined(USE_SDL_RENDERER)
+    void flushDirectYUV(SMPEG_Info *info);
+#endif
+    void setFullScreen(bool fullscreen);
 public:
     void executeLabel();
     void runScript();
@@ -512,12 +515,14 @@ private:
     bool trapHandler();
     bool mouseMoveEvent( SDL_MouseMotionEvent *event );
     bool mousePressEvent( SDL_MouseButtonEvent *event );
+    bool mouseWheelEvent(SDL_MouseWheelEvent *event);
     void variableEditMode( SDL_KeyboardEvent *event );
     void shiftCursorOnButton( int diff );
     bool keyDownEvent( SDL_KeyboardEvent *event );
     void keyUpEvent( SDL_KeyboardEvent *event );
     bool keyPressEvent( SDL_KeyboardEvent *event );
     void timerEvent(bool init_flag);
+    bool convTouchKey(SDL_TouchFingerEvent &finger);
     void runEventLoop();
 
     // ----------------------------------------
@@ -672,7 +677,6 @@ private:
     AnimationInfo *smpeg_info;
 #if defined(USE_SMPEG)
     SMPEG* layer_smpeg_sample;
-    SMPEG_Filter layer_smpeg_filter;
 #endif
     
     int playSound(const char *filename, int format, bool loop_flag, int channel=0);

@@ -153,8 +153,6 @@ public:
     SDL_Surface *setupImageAlpha( SDL_Surface *surface, SDL_Surface *surface_m, bool has_alpha );
     void setImage( SDL_Surface *surface, Uint32 texture_format );
     unsigned char getAlpha(int x, int y);
-
-    void convertFromYUV(SDL_Overlay *src);
 };
 
 #endif // __ANIMATION_INFO_H__

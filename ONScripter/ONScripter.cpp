@@ -37,6 +37,29 @@ extern "C" void waveCallback( int channel );
 #define DEFAULT_ENV_FONT "‚l‚r ƒSƒVƒbƒN"
 #define DEFAULT_AUTOMODE_TIME 1000
 
+void ONScripter::calcRenderRect()
+{
+    int vieww, viewh;
+    int renderw, renderh;
+    SDL_GetRendererOutputSize(renderer, &renderw, &renderh);
+    int swdh = screen_width * renderh;
+    int dwsh = renderw * screen_height;
+    if (swdh == dwsh) {
+        vieww = renderw;
+        viewh = renderh;
+    }
+    else if (swdh > dwsh) {
+        vieww = renderw;
+        viewh = (int)ceil(screen_height * ((float)renderw / screen_width));
+    }
+    else {
+        vieww = (int)ceil(screen_width * ((float)renderh / screen_height));
+        viewh = renderh;
+    }
+    screen_device_width = vieww;
+    screen_device_height = viewh;
+}
+
 void ONScripter::initSDL()
 {
     /* ---------------------------------------- */
@@ -83,25 +106,18 @@ void ONScripter::initSDL()
     screen_ratio2 = script_h.screen_width;
     screen_width  = PDA_WIDTH;
 #elif defined(PDA_AUTOSIZE)
-    SDL_Rect **modes;
-    modes = SDL_ListModes(NULL, SDL_FULLSCREEN);
-    if (modes == (SDL_Rect **)0){
+    SDL_DisplayMode mode;
+    SDL_GetDisplayMode(0, 0, &mode);
+    if (SDL_GetDisplayMode(0, 0, &mode) != 0) {
         fprintf(stderr, "No Video mode available.\n");
         exit(-1);
     }
-    else if (modes == (SDL_Rect **)-1){
-        // no restriction
-    }
- 	else{
-        int width;
-        if (modes[0]->w * screen_height > modes[0]->h * screen_width)
-            width = (modes[0]->h*screen_width/screen_height) & (~0x01); // to be 2 bytes aligned
-        else
-            width = modes[0]->w;
-        screen_ratio1 = width;
-        screen_ratio2 = script_h.screen_width;
-        screen_width  = width;
-    }
+    int width;
+    if (mode.w * screen_height > mode.h * screen_width)
+        width = (mode.h*screen_width / screen_height) & (~0x01); // to be 2 bytes aligned
+    else
+        width = mode.w;
+    screen_width = width;
 #endif
 
     screen_height = screen_width*script_h.screen_height/script_h.screen_width;
@@ -185,9 +201,7 @@ void ONScripter::initSDL()
     
     wm_title_string = new char[ strlen(DEFAULT_WM_TITLE) + 1 ];
     memcpy( wm_title_string, DEFAULT_WM_TITLE, strlen(DEFAULT_WM_TITLE) + 1 );
-    wm_icon_string = new char[ strlen(DEFAULT_WM_ICON) + 1 ];
-    memcpy( wm_icon_string, DEFAULT_WM_TITLE, strlen(DEFAULT_WM_ICON) + 1 );
-    SDL_WM_SetCaption( wm_title_string, wm_icon_string );
+    SDL_SetWindowTitle(window, wm_title_string);
 }
 
 void ONScripter::openAudio(int freq)
@@ -694,17 +708,22 @@ void ONScripter::flushDirect( SDL_Rect &rect, int refresh_mode )
 #endif
 }
 
-void ONScripter::flushDirectYUV(SDL_Overlay *overlay)
+#if defined(USE_SMPEG) && defined(USE_SDL_RENDERER)
+void ONScripter::flushDirectYUV(SMPEG_Info *info)
 {
-#ifdef USE_SDL_RENDERER
     SDL_Rect dst_rect = {(device_width -screen_device_width )/2, 
                          (device_height-screen_device_height)/2,
                          screen_device_width, screen_device_height};
-    SDL_UpdateTexture(texture, &screen_rect, overlay->pixels[0], overlay->pitches[0]);
+    
+    Uint8 *pixel_buf = new Uint8[info->width*info->height + (info->width/2)*(info->height/2)*2];
+    
+    SDL_UpdateTexture(texture, &screen_rect, pixel_buf, info->width);
     SDL_RenderCopy(renderer, texture, &screen_rect, &dst_rect);
     SDL_RenderPresent(renderer);
-#endif    
+    
+    delete[] pixel_buf;
 }
+#endif
 
 void ONScripter::mouseOverCheck( int x, int y )
 {
@@ -821,6 +840,17 @@ void ONScripter::mouseOverCheck( int x, int y )
 
     current_over_button = button;
     shift_over_button = -1;
+}
+    
+void ONScripter::setFullScreen(bool fullscreen)
+{
+    if (fullscreen != fullscreen_mode) {
+        SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+        SDL_GetWindowSize(window, &device_width, &device_height);
+        calcRenderRect();
+        flushDirect(screen_rect, refreshMode());
+        fullscreen_mode = fullscreen;
+    }
 }
 
 void ONScripter::executeLabel()
@@ -975,7 +1005,7 @@ void ONScripter::refreshMouseOverButton()
     shift_over_button = -1;
     current_button_link = root_button_link.next;
     SDL_GetMouseState( &mx, &my );
-    if (!(SDL_GetAppState() & SDL_APPMOUSEFOCUS)){
+    if (!(SDL_GetWindowFlags(window) & SDL_WINDOW_MOUSE_FOCUS)) {
         mx = screen_device_width;
         my = screen_device_height;
     }
