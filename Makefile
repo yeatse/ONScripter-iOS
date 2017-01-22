@@ -40,7 +40,7 @@ clean:
 	make -C libogg clean
 	make -C libvorbisidec clean
 	make -C lua clean
-	make -C libsmpeg -f Makefile.ons clean
+	make -C smpeg -f Makefile.ons clean
 	-rm $(INSTALL_PATH)/lib/libfreetype.a
 	-rm $(INSTALL_PATH)/lib/libmad.a
 	-rm $(INSTALL_PATH)/lib/libogg.a
