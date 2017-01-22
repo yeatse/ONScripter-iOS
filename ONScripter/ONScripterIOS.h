@@ -15,5 +15,5 @@ FOUNDATION_EXPORT double ONScripterVersionNumber;
 FOUNDATION_EXPORT const unsigned char ONScripterVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <ONScripter/PublicHeader.h>
-
+#import <ONScripter/SDLViewController.h>
 

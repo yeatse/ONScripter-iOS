@@ -34,3 +34,5 @@ Carthage
 
 Release-iphonesimulator/
 Release-iphoneos/
+liblua.a
+libsmpeg.a

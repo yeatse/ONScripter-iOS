@@ -51,6 +51,20 @@
 		384217F81E345A2200491F2A /* libSDL2_image.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 380C1F771E339CA500CA2A87 /* libSDL2_image.a */; };
 		384217F91E345A2200491F2A /* libSDL2_mixer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 380C1F7E1E339CC400CA2A87 /* libSDL2_mixer.a */; };
 		384217FA1E345A2200491F2A /* libSDL2_ttf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 380C1F841E339CCE00CA2A87 /* libSDL2_ttf.a */; };
+		3862D2571E351D9A00B65552 /* libSDL2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 380C1F6E1E339C2600CA2A87 /* libSDL2.a */; };
+		3862D25D1E351DF200B65552 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3862D25C1E351DF200B65552 /* OpenGLES.framework */; };
+		3862D26B1E351EA700B65552 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3862D26A1E351EA700B65552 /* MobileCoreServices.framework */; };
+		3862D2701E351EFF00B65552 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3862D2621E351E2C00B65552 /* CoreMotion.framework */; };
+		3862D2721E351F7400B65552 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3862D2711E351F7400B65552 /* GameController.framework */; };
+		3862D2771E35200300B65552 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3862D2751E35200300B65552 /* liblua.a */; };
+		3862D27B1E35209C00B65552 /* SDLViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3862D2791E35209C00B65552 /* SDLViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3862D27C1E35209C00B65552 /* SDLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3862D27A1E35209C00B65552 /* SDLViewController.m */; };
+		3862D27E1E3523D200B65552 /* libsmpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3862D27D1E3523D200B65552 /* libsmpeg.a */; };
+		3862D27F1E35243400B65552 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3862D2661E351E7D00B65552 /* AudioToolbox.framework */; };
+		3862D2801E35244D00B65552 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3862D2681E351E8F00B65552 /* ImageIO.framework */; };
+		3862D2811E35246600B65552 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3862D26E1E351EE700B65552 /* AVFoundation.framework */; };
+		3878FBA21E352C2700555FB7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3878FBA11E352C2700555FB7 /* UIKit.framework */; };
+		3878FBA41E352C8900555FB7 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 3878FBA31E352C8900555FB7 /* libbz2.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -139,6 +153,19 @@
 		380C1FC91E33CC7F00CA2A87 /* ScriptParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptParser.h; sourceTree = "<group>"; };
 		380C1FCB1E33CC7F00CA2A87 /* sjis2utf16.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sjis2utf16.cpp; sourceTree = "<group>"; };
 		380C1FCC1E33CC7F00CA2A87 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
+		3862D25C1E351DF200B65552 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		3862D2621E351E2C00B65552 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		3862D2661E351E7D00B65552 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		3862D2681E351E8F00B65552 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		3862D26A1E351EA700B65552 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		3862D26E1E351EE700B65552 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		3862D2711E351F7400B65552 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
+		3862D2751E35200300B65552 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblua.a; sourceTree = "<group>"; };
+		3862D2791E35209C00B65552 /* SDLViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLViewController.h; sourceTree = "<group>"; };
+		3862D27A1E35209C00B65552 /* SDLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLViewController.m; sourceTree = "<group>"; };
+		3862D27D1E3523D200B65552 /* libsmpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsmpeg.a; sourceTree = "<group>"; };
+		3878FBA11E352C2700555FB7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		3878FBA31E352C8900555FB7 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,9 +173,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3878FBA21E352C2700555FB7 /* UIKit.framework in Frameworks */,
+				3862D25D1E351DF200B65552 /* OpenGLES.framework in Frameworks */,
+				3862D2801E35244D00B65552 /* ImageIO.framework in Frameworks */,
+				3862D27F1E35243400B65552 /* AudioToolbox.framework in Frameworks */,
+				3862D2811E35246600B65552 /* AVFoundation.framework in Frameworks */,
+				3862D26B1E351EA700B65552 /* MobileCoreServices.framework in Frameworks */,
+				3862D2701E351EFF00B65552 /* CoreMotion.framework in Frameworks */,
+				3862D2721E351F7400B65552 /* GameController.framework in Frameworks */,
+				3878FBA41E352C8900555FB7 /* libbz2.tbd in Frameworks */,
+				3862D2571E351D9A00B65552 /* libSDL2.a in Frameworks */,
 				384217F81E345A2200491F2A /* libSDL2_image.a in Frameworks */,
 				384217F91E345A2200491F2A /* libSDL2_mixer.a in Frameworks */,
 				384217FA1E345A2200491F2A /* libSDL2_ttf.a in Frameworks */,
+				3862D2771E35200300B65552 /* liblua.a in Frameworks */,
+				3862D27E1E3523D200B65552 /* libsmpeg.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -180,6 +219,8 @@
 			isa = PBXGroup;
 			children = (
 				380C1F571E33901B00CA2A87 /* ONScripterIOS.h */,
+				3862D2791E35209C00B65552 /* SDLViewController.h */,
+				3862D27A1E35209C00B65552 /* SDLViewController.m */,
 				380C1F9C1E33CC7F00CA2A87 /* AnimationInfo.cpp */,
 				380C1F9D1E33CC7F00CA2A87 /* AnimationInfo.h */,
 				380C1FA01E33CC7F00CA2A87 /* BaseReader.h */,
@@ -261,6 +302,17 @@
 		380C1F931E33C8AB00CA2A87 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3878FBA11E352C2700555FB7 /* UIKit.framework */,
+				3862D25C1E351DF200B65552 /* OpenGLES.framework */,
+				3862D2681E351E8F00B65552 /* ImageIO.framework */,
+				3862D2661E351E7D00B65552 /* AudioToolbox.framework */,
+				3862D26E1E351EE700B65552 /* AVFoundation.framework */,
+				3862D26A1E351EA700B65552 /* MobileCoreServices.framework */,
+				3862D2621E351E2C00B65552 /* CoreMotion.framework */,
+				3862D2711E351F7400B65552 /* GameController.framework */,
+				3878FBA31E352C8900555FB7 /* libbz2.tbd */,
+				3862D2751E35200300B65552 /* liblua.a */,
+				3862D27D1E3523D200B65552 /* libsmpeg.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -283,6 +335,7 @@
 				380C1FDF1E33CC7F00CA2A87 /* NsaReader.h in Headers */,
 				380C1FCE1E33CC7F00CA2A87 /* AnimationInfo.h in Headers */,
 				380C1FD51E33CC7F00CA2A87 /* DirectReader.h in Headers */,
+				3862D27B1E35209C00B65552 /* SDLViewController.h in Headers */,
 				380C1FF51E33CC7F00CA2A87 /* SarReader.h in Headers */,
 				380C1FEF1E33CC7F00CA2A87 /* ONScripter.h in Headers */,
 				380C1FD21E33CC7F00CA2A87 /* ButtonLink.h in Headers */,
@@ -440,6 +493,7 @@
 				380C1FE71E33CC7F00CA2A87 /* ONScripter_file2.cpp in Sources */,
 				380C1FDE1E33CC7F00CA2A87 /* NsaReader.cpp in Sources */,
 				380C1FE51E33CC7F00CA2A87 /* ONScripter_event.cpp in Sources */,
+				3862D27C1E35209C00B65552 /* SDLViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -575,7 +629,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/Release$(EFFECTIVE_PLATFORM_NAME)/lib",
+					"$(PROJECT_DIR)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yeatse.ONScripter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -616,7 +670,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/Release$(EFFECTIVE_PLATFORM_NAME)/lib",
+					"$(PROJECT_DIR)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yeatse.ONScripter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
