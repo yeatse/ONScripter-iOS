@@ -94,10 +94,10 @@
 		380C1F541E33901B00CA2A87 /* ONScripter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ONScripter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		380C1F571E33901B00CA2A87 /* ONScripterIOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ONScripterIOS.h; sourceTree = "<group>"; };
 		380C1F581E33901B00CA2A87 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		380C1F671E339C2600CA2A87 /* SDL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL.xcodeproj; path = "SDL2-2.0.5/Xcode-iOS/SDL/SDL.xcodeproj"; sourceTree = "<group>"; };
-		380C1F721E339CA500CA2A87 /* SDL_image.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL_image.xcodeproj; path = "SDL2_image-2.0.1/Xcode-iOS/SDL_image.xcodeproj"; sourceTree = SOURCE_ROOT; };
-		380C1F791E339CC400CA2A87 /* SDL_mixer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL_mixer.xcodeproj; path = "SDL2_mixer-2.0.1/Xcode-iOS/SDL_mixer.xcodeproj"; sourceTree = "<group>"; };
-		380C1F7F1E339CCE00CA2A87 /* SDL_ttf.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL_ttf.xcodeproj; path = "SDL2_ttf-2.0.14/Xcode-iOS/SDL_ttf.xcodeproj"; sourceTree = "<group>"; };
+		380C1F671E339C2600CA2A87 /* SDL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL.xcodeproj; path = "SDL/Xcode-iOS/SDL/SDL.xcodeproj"; sourceTree = "<group>"; };
+		380C1F721E339CA500CA2A87 /* SDL_image.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL_image.xcodeproj; path = "SDL_image/Xcode-iOS/SDL_image.xcodeproj"; sourceTree = SOURCE_ROOT; };
+		380C1F791E339CC400CA2A87 /* SDL_mixer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL_mixer.xcodeproj; path = "SDL_mixer/Xcode-iOS/SDL_mixer.xcodeproj"; sourceTree = "<group>"; };
+		380C1F7F1E339CCE00CA2A87 /* SDL_ttf.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL_ttf.xcodeproj; path = "SDL_ttf/Xcode-iOS/SDL_ttf.xcodeproj"; sourceTree = "<group>"; };
 		380C1F9C1E33CC7F00CA2A87 /* AnimationInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationInfo.cpp; sourceTree = "<group>"; };
 		380C1F9D1E33CC7F00CA2A87 /* AnimationInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationInfo.h; sourceTree = "<group>"; };
 		380C1FA01E33CC7F00CA2A87 /* BaseReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseReader.h; sourceTree = "<group>"; };
