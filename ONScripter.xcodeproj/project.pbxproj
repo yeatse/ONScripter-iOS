@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		380C1F591E33901B00CA2A87 /* ONScripterIOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1F571E33901B00CA2A87 /* ONScripterIOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		380C1F711E339C6A00CA2A87 /* libSDL2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 380C1F6E1E339C2600CA2A87 /* libSDL2.a */; };
-		380C1F781E339CB200CA2A87 /* libSDL2_image.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 380C1F771E339CA500CA2A87 /* libSDL2_image.a */; };
 		380C1FCD1E33CC7F00CA2A87 /* AnimationInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1F9C1E33CC7F00CA2A87 /* AnimationInfo.cpp */; };
 		380C1FCE1E33CC7F00CA2A87 /* AnimationInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1F9D1E33CC7F00CA2A87 /* AnimationInfo.h */; };
 		380C1FD11E33CC7F00CA2A87 /* BaseReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1FA01E33CC7F00CA2A87 /* BaseReader.h */; };
@@ -50,6 +48,9 @@
 		380C1FFA1E33CC7F00CA2A87 /* ScriptParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1FC91E33CC7F00CA2A87 /* ScriptParser.h */; };
 		380C1FFC1E33CC7F00CA2A87 /* sjis2utf16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FCB1E33CC7F00CA2A87 /* sjis2utf16.cpp */; };
 		380C1FFD1E33CC7F00CA2A87 /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1FCC1E33CC7F00CA2A87 /* version.h */; };
+		384217F81E345A2200491F2A /* libSDL2_image.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 380C1F771E339CA500CA2A87 /* libSDL2_image.a */; };
+		384217F91E345A2200491F2A /* libSDL2_mixer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 380C1F7E1E339CC400CA2A87 /* libSDL2_mixer.a */; };
+		384217FA1E345A2200491F2A /* libSDL2_ttf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 380C1F841E339CCE00CA2A87 /* libSDL2_ttf.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -145,8 +146,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				380C1F781E339CB200CA2A87 /* libSDL2_image.a in Frameworks */,
-				380C1F711E339C6A00CA2A87 /* libSDL2.a in Frameworks */,
+				384217F81E345A2200491F2A /* libSDL2_image.a in Frameworks */,
+				384217F91E345A2200491F2A /* libSDL2_mixer.a in Frameworks */,
+				384217FA1E345A2200491F2A /* libSDL2_ttf.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
