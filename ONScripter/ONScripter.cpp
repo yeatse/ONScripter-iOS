@@ -60,137 +60,31 @@ void ONScripter::calcRenderRect()
     screen_device_height = viewh;
 }
 
-void ONScripter::initSDL()
+void ONScripter::initDimensions()
 {
-    /* ---------------------------------------- */
-    /* Initialize SDL */
-
-    if ( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_AUDIO ) < 0 ){
-        fprintf( stderr, "Couldn't initialize SDL: %s\n", SDL_GetError() );
-        exit(-1);
-    }
-
-    atexit(SDL_Quit);
-
-#ifdef USE_CDROM
-    if( cdaudio_flag && SDL_InitSubSystem( SDL_INIT_CDROM ) < 0 ){
-        fprintf( stderr, "Couldn't initialize CD-ROM: %s\n", SDL_GetError() );
-        exit(-1);
-    }
-#endif
-
-#if !defined(IOS)
-    if(SDL_InitSubSystem( SDL_INIT_JOYSTICK ) == 0 && SDL_JoystickOpen(0) != NULL)
-        printf( "Initialize JOYSTICK\n");
-#endif
-    
-#if defined(PSP) || defined(IPODLINUX) || defined(GP2X) || defined(WINCE)
-    SDL_ShowCursor(SDL_DISABLE);
-#endif
-
-    /* ---------------------------------------- */
-    /* Initialize SDL */
-    if ( TTF_Init() < 0 ){
-        fprintf( stderr, "can't initialize SDL TTF\n");
-        exit(-1);
-    }
-
-#if defined(BPP16)
-    screen_bpp = 16;
-#else
-    screen_bpp = 32;
-#endif
-    
-#if defined(PDA_WIDTH)
-    screen_ratio1 = PDA_WIDTH;
-    screen_ratio2 = script_h.screen_width;
-    screen_width  = PDA_WIDTH;
-#elif defined(PDA_AUTOSIZE)
-    SDL_DisplayMode mode;
-    SDL_GetDisplayMode(0, 0, &mode);
-    if (SDL_GetDisplayMode(0, 0, &mode) != 0) {
-        fprintf(stderr, "No Video mode available.\n");
-        exit(-1);
-    }
-    int width;
-    if (mode.w * screen_height > mode.h * screen_width)
-        width = (mode.h*screen_width / screen_height) & (~0x01); // to be 2 bytes aligned
-    else
-        width = mode.w;
-    screen_width = width;
-#endif
-
-    screen_height = screen_width*script_h.screen_height/script_h.screen_width;
-
-    screen_device_width  = screen_width;
-    screen_device_height = screen_height;
-#if defined(USE_SDL_RENDERER)
-    // use hardware scaling
     screen_ratio1 = 1;
     screen_ratio2 = 1;
     screen_width  = script_h.screen_width;
     screen_height = script_h.screen_height;
-
-    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-
-    window = SDL_CreateWindow(NULL, 0, 0, screen_device_width, screen_device_height, SDL_WINDOW_OPENGL|SDL_WINDOW_SHOWN|SDL_WINDOW_BORDERLESS);
+    
     SDL_GetWindowSize(window, &device_width, &device_height);
-    renderer = SDL_CreateRenderer(window, -1, 0);
-    texture_format = SDL_PIXELFORMAT_ARGB8888;
+    if (device_width * screen_width > device_height * screen_height) {
+        screen_device_width = (device_height * screen_width / screen_height) & (~0x01); // to be 2 bytes aligned
+    } else {
+        screen_device_width = device_width;
+    }
+    screen_device_height = screen_device_width * screen_height / screen_width;
+    
     SDL_RendererInfo info;
     SDL_GetRendererInfo(renderer, &info);
     if (info.texture_formats[0] == SDL_PIXELFORMAT_ABGR8888)
         texture_format = SDL_PIXELFORMAT_ABGR8888;
-    SDL_RenderClear(renderer);
-#else
-#if defined(ANDROID)
-    // use hardware scaling
-    screen_ratio1 = 1;
-    screen_ratio2 = 1;
-    screen_width  = script_h.screen_width;
-    screen_height = script_h.screen_height;
-#endif
-    screen_surface = SDL_SetVideoMode( screen_width, screen_height, screen_bpp, DEFAULT_VIDEO_SURFACE_FLAG|(fullscreen_mode?SDL_FULLSCREEN:0) );
-#ifdef BPP16
-    texture_format = SDL_PIXELFORMAT_RGB565;
-#else
-#if defined(ANDROID)
-    SDL_SetSurfaceBlendMode(screen_surface, SDL_BLENDMODE_NONE);
-    texture_format = SDL_PIXELFORMAT_ABGR8888;
-#else
-    texture_format = SDL_PIXELFORMAT_ARGB8888;
-#endif
-#endif
-#endif
+    else
+        texture_format = SDL_PIXELFORMAT_ARGB8888;
 
-    /* ---------------------------------------- */
-    /* Check if VGA screen is available. */
-#if !defined(USE_SDL_RENDERER) && (PDA_WIDTH==640)
-    if ( screen_surface == NULL ){
-        screen_ratio1 /= 2;
-        screen_width  /= 2;
-        screen_height /= 2;
-        screen_device_width  = screen_width;
-        screen_device_height = screen_height;
-        screen_surface = SDL_SetVideoMode( screen_device_width, screen_device_height, screen_bpp, DEFAULT_VIDEO_SURFACE_FLAG|(fullscreen_mode?SDL_FULLSCREEN:0) );
-    }
-#endif
     underline_value = script_h.screen_height;
 
-#ifndef USE_SDL_RENDERER
-    if ( screen_surface == NULL ) {
-        fprintf( stderr, "Couldn't set %dx%dx%d video mode: %s\n",
-                 screen_width, screen_height, screen_bpp, SDL_GetError() );
-        exit(-1);
-    }
-#endif
-    printf("Display: %d x %d (%d bpp)\n", screen_width, screen_height, screen_bpp);
+    printf("Display: %d x %d \n", screen_width, screen_height);
     dirty_rect.setDimension(screen_width, screen_height);
     
     screen_rect.x = screen_rect.y = 0;
@@ -202,6 +96,8 @@ void ONScripter::initSDL()
     wm_title_string = new char[ strlen(DEFAULT_WM_TITLE) + 1 ];
     memcpy( wm_title_string, DEFAULT_WM_TITLE, strlen(DEFAULT_WM_TITLE) + 1 );
     SDL_SetWindowTitle(window, wm_title_string);
+    
+    SDL_RenderClear(renderer);
 }
 
 void ONScripter::openAudio(int freq)
@@ -235,8 +131,8 @@ void ONScripter::openAudio(int freq)
         Mix_ChannelFinished( waveCallback );
     }
 }
-
-ONScripter::ONScripter()
+    
+ONScripter::ONScripter(SDL_Window *window, SDL_Renderer *renderer)
 {
     is_script_read = false;
 
@@ -270,6 +166,9 @@ ONScripter::ONScripter()
 #else
     midi_cmd  = getenv("MUSIC_CMD");
 #endif
+    
+    this->window = window;
+    this->renderer = renderer;
 
     makeFuncLUT();
 }
@@ -385,7 +284,7 @@ int ONScripter::openScript()
 
 int ONScripter::init()
 {
-    initSDL();
+    initDimensions();
     openAudio();
 
     image_surface        = AnimationInfo::alloc32bitSurface( 1, 1, texture_format );

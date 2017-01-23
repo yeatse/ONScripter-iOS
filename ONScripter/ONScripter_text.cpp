@@ -126,7 +126,7 @@ void ONScripter::drawGlyph( SDL_Surface *dst_surface, FontInfo *info, SDL_Color 
         dst_rect.y -= info->font_size_xy[0]/2;
     }
 
-    if (info->is_shadow && tmp_surface_s){
+    if (info->is_shadow && tmp_surface_s && tmp_surface){
         SDL_Rect dst_rect_s = dst_rect;
         if (render_font_outline){
             dst_rect_s.x -= (tmp_surface_s->w - tmp_surface->w)/2;

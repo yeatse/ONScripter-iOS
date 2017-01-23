@@ -1411,6 +1411,7 @@ void ONScripter::runEventLoop()
                     default:
                         break;
                 }
+                break;
           case SDL_QUIT:
             endCommand();
             break;

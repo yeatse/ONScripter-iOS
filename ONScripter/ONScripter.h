@@ -57,6 +57,7 @@
 #define DEFAULT_WM_TITLE "ONScripter"
 #define DEFAULT_WM_ICON  "ONScripter"
 
+
 class ONScripter : public ScriptParser
 {
 public:
@@ -69,7 +70,8 @@ public:
         char str[16];
         bool down_flag;
     };
-        
+    
+    ONScripter(SDL_Window *window, SDL_Renderer *renderer);
     ONScripter();
     ~ONScripter();
 
@@ -392,7 +394,7 @@ private:
     NestInfo select_label_info;
     int  shortcut_mouse_line;
 
-    void initSDL();
+    void initDimensions();
     void calcRenderRect();
     void openAudio(int freq=-1);
     void reset(); // called on definereset
