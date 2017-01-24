@@ -14,6 +14,8 @@
 
 FOUNDATION_EXTERN int SDL_SendAppEvent(SDL_EventType eventType);
 FOUNDATION_EXTERN int SDL_SendWindowEvent(SDL_Window * window, Uint8 windowevent, int data1, int data2);
+FOUNDATION_EXTERN void SDL_SyncDisplayModeWithOrientation(UIInterfaceOrientation orientation);
+
 FOUNDATION_EXTERN void playVideoIOS(const char *filename, bool click_flag, bool loop_flag)
 {
     NSString *fileName = [NSString stringWithUTF8String:filename];
@@ -176,18 +178,7 @@ FOUNDATION_EXTERN void playVideoIOS(const char *filename, bool click_flag, bool 
 }
 
 - (void)applicationDidChangeStatusBarOrientation {
-    SDL_DisplayMode displayMode;
-    if (SDL_GetWindowDisplayMode(_sdlWindow, &displayMode) != 0) {
-        return;
-    }
-    
-    BOOL isLandscape = UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation);
-    if (isLandscape != (displayMode.w > displayMode.h)) {
-        int height = displayMode.w;
-        displayMode.w = displayMode.h;
-        displayMode.h = height;
-        SDL_SetWindowDisplayMode(_sdlWindow, &displayMode);
-    }
+    SDL_SyncDisplayModeWithOrientation([UIApplication sharedApplication].statusBarOrientation);
 }
 
 - (void)applicationWillResignActive {
