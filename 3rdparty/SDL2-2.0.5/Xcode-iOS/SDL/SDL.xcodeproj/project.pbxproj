@@ -204,7 +204,6 @@
 		FAB598801BB5C31600BE72C5 /* SDL_thread.c in Sources */ = {isa = PBXBuildFile; fileRef = FD99BA150DD52EDC00FB1D6B /* SDL_thread.c */; };
 		FAB598821BB5C31600BE72C5 /* SDL_systimer.c in Sources */ = {isa = PBXBuildFile; fileRef = FD99BA310DD52EDC00FB1D6B /* SDL_systimer.c */; };
 		FAB598831BB5C31600BE72C5 /* SDL_timer.c in Sources */ = {isa = PBXBuildFile; fileRef = FD99BA2E0DD52EDC00FB1D6B /* SDL_timer.c */; };
-		FAB598871BB5C31600BE72C5 /* SDL_uikitappdelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FD689FCC0E26E9D400F90B21 /* SDL_uikitappdelegate.m */; };
 		FAB598891BB5C31600BE72C5 /* SDL_uikitevents.m in Sources */ = {isa = PBXBuildFile; fileRef = FD689F0D0E26E5D900F90B21 /* SDL_uikitevents.m */; };
 		FAB5988B1BB5C31600BE72C5 /* SDL_uikitmessagebox.m in Sources */ = {isa = PBXBuildFile; fileRef = AABCC3931640643D00AB8930 /* SDL_uikitmessagebox.m */; };
 		FAB5988D1BB5C31600BE72C5 /* SDL_uikitmodes.m in Sources */ = {isa = PBXBuildFile; fileRef = AA126AD31617C5E6005ABC8F /* SDL_uikitmodes.m */; };
@@ -284,8 +283,6 @@
 		FD689F250E26E5D900F90B21 /* SDL_uikitwindow.m in Sources */ = {isa = PBXBuildFile; fileRef = FD689F150E26E5D900F90B21 /* SDL_uikitwindow.m */; };
 		FD689F260E26E5D900F90B21 /* SDL_uikitopenglview.h in Headers */ = {isa = PBXBuildFile; fileRef = FD689F160E26E5D900F90B21 /* SDL_uikitopenglview.h */; };
 		FD689F270E26E5D900F90B21 /* SDL_uikitopenglview.m in Sources */ = {isa = PBXBuildFile; fileRef = FD689F170E26E5D900F90B21 /* SDL_uikitopenglview.m */; };
-		FD689FCE0E26E9D400F90B21 /* SDL_uikitappdelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FD689FCC0E26E9D400F90B21 /* SDL_uikitappdelegate.m */; };
-		FD689FCF0E26E9D400F90B21 /* SDL_uikitappdelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = FD689FCD0E26E9D400F90B21 /* SDL_uikitappdelegate.h */; };
 		FD8BD8250E27E25900B52CD5 /* SDL_sysloadso.c in Sources */ = {isa = PBXBuildFile; fileRef = FD8BD8190E27E25900B52CD5 /* SDL_sysloadso.c */; };
 		FDA6844D0DF2374E00F98A1A /* SDL_blit.c in Sources */ = {isa = PBXBuildFile; fileRef = FDA683000DF2374E00F98A1A /* SDL_blit.c */; };
 		FDA6844E0DF2374E00F98A1A /* SDL_blit.h in Headers */ = {isa = PBXBuildFile; fileRef = FDA683010DF2374E00F98A1A /* SDL_blit.h */; };
@@ -1076,7 +1073,6 @@
 				FD689F240E26E5D900F90B21 /* SDL_uikitwindow.h in Headers */,
 				FD689F260E26E5D900F90B21 /* SDL_uikitopenglview.h in Headers */,
 				56A6703818565E760007D20F /* SDL_dynapi.h in Headers */,
-				FD689FCF0E26E9D400F90B21 /* SDL_uikitappdelegate.h in Headers */,
 				56A6703518565E760007D20F /* SDL_dynapi_overrides.h in Headers */,
 				047677BD0EA76A31008ABAF1 /* SDL_syshaptic.h in Headers */,
 				046387420F0B5B7D0041FD65 /* SDL_blit_slow.h in Headers */,
@@ -1313,7 +1309,6 @@
 				FAB598801BB5C31600BE72C5 /* SDL_thread.c in Sources */,
 				FAB598821BB5C31600BE72C5 /* SDL_systimer.c in Sources */,
 				FAB598831BB5C31600BE72C5 /* SDL_timer.c in Sources */,
-				FAB598871BB5C31600BE72C5 /* SDL_uikitappdelegate.m in Sources */,
 				FAB598891BB5C31600BE72C5 /* SDL_uikitevents.m in Sources */,
 				FAB5988B1BB5C31600BE72C5 /* SDL_uikitmessagebox.m in Sources */,
 				FAB5988D1BB5C31600BE72C5 /* SDL_uikitmodes.m in Sources */,
@@ -1410,7 +1405,6 @@
 				FD689F230E26E5D900F90B21 /* SDL_uikitview.m in Sources */,
 				FD689F250E26E5D900F90B21 /* SDL_uikitwindow.m in Sources */,
 				FD689F270E26E5D900F90B21 /* SDL_uikitopenglview.m in Sources */,
-				FD689FCE0E26E9D400F90B21 /* SDL_uikitappdelegate.m in Sources */,
 				FD8BD8250E27E25900B52CD5 /* SDL_sysloadso.c in Sources */,
 				047677BB0EA76A31008ABAF1 /* SDL_syshaptic.c in Sources */,
 				047677BC0EA76A31008ABAF1 /* SDL_haptic.c in Sources */,
