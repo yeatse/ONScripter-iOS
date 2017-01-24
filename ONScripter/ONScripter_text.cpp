@@ -22,8 +22,9 @@
  */
 
 #include "ONScripter.h"
+#include "coding2utf16.h"
 
-extern unsigned short convSJIS2UTF16( unsigned short in );
+extern Coding2UTF16 *coding2utf16;
 
 #define IS_ROTATION_REQUIRED(x)	\
     (!IS_TWO_BYTE(*(x)) ||                                              \
@@ -75,7 +76,7 @@ void ONScripter::drawGlyph( SDL_Surface *dst_surface, FontInfo *info, SDL_Color 
     if (IS_TWO_BYTE(text[0])){
         unsigned index = ((unsigned char*)text)[0];
         index = index << 8 | ((unsigned char*)text)[1];
-        unicode = convSJIS2UTF16( index );
+        unicode = coding2utf16->conv2UTF16( index );
     }
     else{
         if ((text[0] & 0xe0) == 0xa0 || (text[0] & 0xe0) == 0xc0) unicode = ((unsigned char*)text)[0] - 0xa0 + 0xff60;
@@ -667,8 +668,8 @@ int ONScripter::textCommand()
     if (buf[string_buffer_offset] == '[')
         string_buffer_offset++;
     else if (zenkakko_flag && 
-             buf[string_buffer_offset  ] == "y"[0] && 
-             buf[string_buffer_offset+1] == "y"[1])
+             buf[string_buffer_offset  ] == coding2utf16->bracket[0] &&
+             buf[string_buffer_offset+1] == coding2utf16->bracket[1])
         string_buffer_offset += 2;
     else
         tag_flag = false;
@@ -677,8 +678,8 @@ int ONScripter::textCommand()
     int end_offset = start_offset;
     while (tag_flag && buf[string_buffer_offset]){
         if (zenkakko_flag && 
-            buf[string_buffer_offset  ] == "z"[0] && 
-            buf[string_buffer_offset+1] == "z"[1]){
+            buf[string_buffer_offset  ] == coding2utf16->bracket[2] && 
+            buf[string_buffer_offset+1] == coding2utf16->bracket[3]){
             end_offset = string_buffer_offset;
             string_buffer_offset += 2;
             break;

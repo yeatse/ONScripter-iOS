@@ -11,6 +11,8 @@
 
 #import "ONScripter.h"
 #import <SDL.h>
+#import "gbk2utf16.h"
+#import "sjis2utf16.h"
 
 FOUNDATION_EXTERN int SDL_SendAppEvent(SDL_EventType eventType);
 FOUNDATION_EXTERN int SDL_SendWindowEvent(SDL_Window * window, Uint8 windowevent, int data1, int data2);
@@ -20,6 +22,8 @@ FOUNDATION_EXTERN void playVideoIOS(const char *filename, bool click_flag, bool 
 {
     NSString *fileName = [NSString stringWithUTF8String:filename];
 }
+
+Coding2UTF16 *coding2utf16 = NULL;
 
 @implementation ONSConfiguration
 
@@ -79,6 +83,10 @@ FOUNDATION_EXTERN void playVideoIOS(const char *filename, bool click_flag, bool 
     
     if (![self initSDL]) {
         return ONSExecuteInitializationError;
+    }
+    
+    if (!coding2utf16) {
+        coding2utf16 = new GBK2UTF16();
     }
     
     _onscripter = new ONScripter(_sdlWindow, _sdlRenderer);

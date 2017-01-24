@@ -22,6 +22,7 @@
  */
 
 #include "ONScripter.h"
+#include "coding2utf16.h"
 
 #define DIALOG_W 241
 #define DIALOG_H 167
@@ -42,16 +43,17 @@
 #define MESSAGE_OK "OK"
 #define MESSAGE_CANCEL "Cancel"
 #else
-#define MESSAGE_SAVE_EXIST "%s%s@%sŒŽ%s“ú%sŽž%s•ª"
-#define MESSAGE_SAVE_EMPTY "%s%s@||||||||||||"
-#define MESSAGE_SAVE_CONFIRM "%s%s‚ÉƒZ[ƒu‚µ‚Ü‚·B‚æ‚ë‚µ‚¢‚Å‚·‚©H"
-#define MESSAGE_LOAD_CONFIRM "%s%s‚ðƒ[ƒh‚µ‚Ü‚·B‚æ‚ë‚µ‚¢‚Å‚·‚©H"
-#define MESSAGE_RESET_CONFIRM "ƒŠƒZƒbƒg‚µ‚Ü‚·B‚æ‚ë‚µ‚¢‚Å‚·‚©H"
-#define MESSAGE_END_CONFIRM "I—¹‚µ‚Ü‚·B‚æ‚ë‚µ‚¢‚Å‚·‚©H"
-#define MESSAGE_YES "‚Í‚¢"
-#define MESSAGE_NO "‚¢‚¢‚¦"
-#define MESSAGE_OK "‚n‚j"
-#define MESSAGE_CANCEL "ƒLƒƒƒ“ƒZƒ‹"
+extern Coding2UTF16 *coding2utf16;
+#define MESSAGE_SAVE_EXIST coding2utf16->MESSAGE_SAVE_EXIST
+#define MESSAGE_SAVE_EMPTY coding2utf16->MESSAGE_SAVE_EMPTY
+#define MESSAGE_SAVE_CONFIRM coding2utf16->MESSAGE_SAVE_CONFIRM
+#define MESSAGE_LOAD_CONFIRM coding2utf16->MESSAGE_LOAD_CONFIRM
+#define MESSAGE_RESET_CONFIRM coding2utf16->MESSAGE_RESET_CONFIRM
+#define MESSAGE_END_CONFIRM coding2utf16->MESSAGE_END_CONFIRM
+#define MESSAGE_YES coding2utf16->MESSAGE_YES
+#define MESSAGE_NO coding2utf16->MESSAGE_NO
+#define MESSAGE_OK coding2utf16->MESSAGE_OK
+#define MESSAGE_CANCEL coding2utf16->MESSAGE_CANCEL
 #endif
 
 #ifdef ANDROID

@@ -22,19 +22,20 @@
  */
 
 #include "ONScripter.h"
+#include "coding2utf16.h"
 #ifdef USE_FONTCONFIG
 #include <fontconfig/fontconfig.h>
 #endif
 
-extern void initSJIS2UTF16();
-extern "C" void waveCallback( int channel );
+extern Coding2UTF16 *coding2utf16;
+extern "C" void waveCallback(int channel);
 
 #define DEFAULT_AUDIOBUF  4096
 
 #define FONT_FILE "default.ttf"
 #define REGISTRY_FILE "registry.txt"
 #define DLL_FILE "dll.txt"
-#define DEFAULT_ENV_FONT "‚l‚r ƒSƒVƒbƒN"
+#define DEFAULT_ENV_FONT "??"
 #define DEFAULT_AUTOMODE_TIME 1000
 
 void ONScripter::calcRenderRect()
@@ -75,6 +76,9 @@ void ONScripter::initDimensions()
     }
     screen_device_height = screen_device_width * screen_height / screen_width;
     
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    calcRenderRect();
+    
     SDL_RendererInfo info;
     SDL_GetRendererInfo(renderer, &info);
     if (info.texture_formats[0] == SDL_PIXELFORMAT_ABGR8888)
@@ -91,7 +95,7 @@ void ONScripter::initDimensions()
     screen_rect.w = screen_width;
     screen_rect.h = screen_height;
 
-    initSJIS2UTF16();
+    coding2utf16->init();
     
     wm_title_string = new char[ strlen(DEFAULT_WM_TITLE) + 1 ];
     memcpy( wm_title_string, DEFAULT_WM_TITLE, strlen(DEFAULT_WM_TITLE) + 1 );

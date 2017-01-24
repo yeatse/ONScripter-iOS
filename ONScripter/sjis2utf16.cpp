@@ -1,6 +1,29 @@
-#include <stdio.h>
-/* sjis 0x8140 - 0xfcfc */
-static unsigned short *sjis_2_utf16;
+/* -*- C++ -*-
+ *
+ *  sjis2utf16.cpp
+ *
+ *  Copyright (C) 2014-2016 jh10001 <jh10001@live.cn>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+#include "sjis2utf16.h"
+#include <string.h>
+
+static const uint16_t CODINGLEFT = 0x8140,CODINGRIGHT = 0xfcfc;
+static uint16_t *sjis_2_utf16;
 
 static unsigned short *utf16_2_sjis_00;
 static unsigned short *utf16_2_sjis_1e;
@@ -8,7 +31,7 @@ static unsigned short *utf16_2_sjis_20;
 static unsigned short *utf16_2_sjis_f9;
 static unsigned short *utf16_2_sjis_ff;
 
-static unsigned short sjis_2_utf16_org[][2] = {
+static uint16_t sjis_2_utf16_org[][2] = {
 	{0x8140,0x3000},
 	{0x8141,0x3001},
 	{0x8142,0x3002},
@@ -11387,44 +11410,61 @@ static unsigned short sjis_2_utf16_org[][2] = {
 	{0,0}
 };
 
-void initSJIS2UTF16()
-{
-    int i = 0;
+void SJIS2UTF16::init() {
+	strcpy(space,"Å@");
+	strcpy(minus,"Å|");
+	strcpy(bracket,"ÅyÅz");
+	strcpy(num_str,"ÇOÇPÇQÇRÇSÇTÇUÇVÇWÇX");
+	strcpy(DEFAULT_START_KINSOKU,"ÅvÅxÅjÅnÅpÅAÅBÅCÅDÅEÅHÅIÅRÅSÅTÅUÅXÅ[");
+	strcpy(DEFAULT_END_KINSOKU,"ÅuÅwÅiÅmÅo");
+	strcpy(DEFAULT_SAVE_MENU_NAME,"ÅÉÉZÅ[ÉuÅÑ");
+	strcpy(DEFAULT_LOAD_MENU_NAME,"ÅÉÉçÅ[ÉhÅÑ");
+	strcpy(DEFAULT_SAVE_ITEM_NAME,"ÇµÇ®ÇË");
+	strcpy(MESSAGE_SAVE_EXIST,"%s%sÅ@%såé%sì˙%séû%sï™");
+	strcpy(MESSAGE_SAVE_EMPTY,"%s%sÅ@Å|Å|Å|Å|Å|Å|Å|Å|Å|Å|Å|Å|");
+	strcpy(MESSAGE_SAVE_CONFIRM,"%s%sÇ…ÉZÅ[ÉuÇµÇ‹Ç∑ÅBÇÊÇÎÇµÇ¢Ç≈Ç∑Ç©ÅH");
+	strcpy(MESSAGE_LOAD_CONFIRM,"%s%sÇÉçÅ[ÉhÇµÇ‹Ç∑ÅBÇÊÇÎÇµÇ¢Ç≈Ç∑Ç©ÅH");
+	strcpy(MESSAGE_RESET_CONFIRM,"ÉäÉZÉbÉgÇµÇ‹Ç∑ÅBÇÊÇÎÇµÇ¢Ç≈Ç∑Ç©ÅH");
+	strcpy(MESSAGE_END_CONFIRM,"èIóπÇµÇ‹Ç∑ÅBÇÊÇÎÇµÇ¢Ç≈Ç∑Ç©ÅH");
+	strcpy(MESSAGE_YES,"ÇÕÇ¢");
+	strcpy(MESSAGE_NO,"Ç¢Ç¢Ç¶");
+	strcpy(MESSAGE_OK,"ÇnÇj");
+	strcpy(MESSAGE_CANCEL,"ÉLÉÉÉìÉZÉã");
 
-    sjis_2_utf16 = new unsigned short[0xfcfc - 0x8140 + 1];
+	int i = 0;
 
-    utf16_2_sjis_00 = new unsigned short[0x0500];
-    utf16_2_sjis_1e = new unsigned short[0x0200];
-    utf16_2_sjis_20 = new unsigned short[0x8000];
-    utf16_2_sjis_f9 = new unsigned short[0x0200];
-    utf16_2_sjis_ff = new unsigned short[0x0100];
+	sjis_2_utf16 = new unsigned short[0xfcfc - 0x8140 + 1];
 
-    while( sjis_2_utf16_org[i][0] ){
-        unsigned short sjis  = sjis_2_utf16_org[i][0];
-        unsigned short utf16 = sjis_2_utf16_org[i][1];
-        sjis_2_utf16[sjis - 0x8140] = utf16;
+	utf16_2_sjis_00 = new unsigned short[0x0500];
+	utf16_2_sjis_1e = new unsigned short[0x0200];
+	utf16_2_sjis_20 = new unsigned short[0x8000];
+	utf16_2_sjis_f9 = new unsigned short[0x0200];
+	utf16_2_sjis_ff = new unsigned short[0x0100];
 
-        if (utf16 < 0x1000) // 0x0000-0x04ff
-            utf16_2_sjis_00[utf16] = sjis;
-        else if (utf16 < 0x2000) // 0x1e00-0x1fff
-            utf16_2_sjis_1e[utf16-0x1e00] = sjis;
-        else if (utf16 < 0xa000) // 0x2000-0x9fff
-             utf16_2_sjis_20[utf16-0x2000] = sjis;
-        else if (utf16 < 0xfb00) // 0xf900-0xfaff
-            utf16_2_sjis_f9[utf16-0xf900] = sjis;
-        else // 0xff00-0xffff
-            utf16_2_sjis_ff[utf16-0xff00] = sjis;
-        i++;
-    }
+	while( sjis_2_utf16_org[i][0] ){
+		unsigned short sjis  = sjis_2_utf16_org[i][0];
+		unsigned short utf16 = sjis_2_utf16_org[i][1];
+		sjis_2_utf16[sjis - CODINGLEFT] = utf16;
+
+		if (utf16 < 0x1000) // 0x0000-0x04ff
+			utf16_2_sjis_00[utf16] = sjis;
+		else if (utf16 < 0x2000) // 0x1e00-0x1fff
+			utf16_2_sjis_1e[utf16-0x1e00] = sjis;
+		else if (utf16 < 0xa000) // 0x2000-0x9fff
+			utf16_2_sjis_20[utf16-0x2000] = sjis;
+		else if (utf16 < 0xfb00) // 0xf900-0xfaff
+			utf16_2_sjis_f9[utf16-0xf900] = sjis;
+		else // 0xff00-0xffff
+			utf16_2_sjis_ff[utf16-0xff00] = sjis;
+		++i;
+	}
 }
 
-unsigned short convSJIS2UTF16( unsigned short in )
-{
-    return sjis_2_utf16[ in - 0x8140 ];
+uint16_t SJIS2UTF16::conv2UTF16(uint16_t in) const {
+	return sjis_2_utf16[in - CODINGLEFT];
 }
 
-unsigned short convUTF162SJIS( unsigned short in )
-{
+uint16_t SJIS2UTF16::convUTF162Coding(uint16_t in) const {
     if (in < 0x1000) // 0x0000-0x04ff
         return utf16_2_sjis_00[in];
     else if (in < 0x2000) // 0x1e00-0x1fff
@@ -11438,52 +11478,3 @@ unsigned short convUTF162SJIS( unsigned short in )
     return utf16_2_sjis_ff[in-0xff00];
 }
 
-int convUTF16ToUTF8( unsigned char dst[4], unsigned short src )
-{
-    if (src & 0xff80){
-        if (src & 0xf800){
-            // UCS-2 = U+0800 - U+FFFF -> UTF-8 (3 bytes)
-            dst[0] = 0xe0 | (src >> 12);
-            dst[1] = 0x80 | ((src >> 6) & 0x3f);
-            dst[2] = 0x80 | (src & 0x3f);
-            dst[3] = 0;
-
-            return 3;
-        }
-
-        // UCS-2 = U+0080 - U+07FF -> UTF-8 (2 bytes)
-        dst[0] = 0xc0 | (src >> 6);
-        dst[1] = 0x80 | (src & 0x3f);
-        dst[2] = 0;
-
-        return 2;
-    }
-
-    // UCS-2 = U+0000 - U+007F -> UTF-8 (1 byte)
-    dst[0] = src;
-    dst[1] = 0;
-
-    return 1;
-}
-
-unsigned short convUTF8ToUTF16( const char **src)
-{
-    unsigned short utf16=0;
-    
-    if (**src & 0x80){
-        if (**src & 0x20){
-            utf16 |= ((unsigned short)((*(*src)++)&0x0f)) << 12;
-            utf16 |= ((unsigned short)((*(*src)++)&0x3f)) << 6;
-            utf16 |= ((unsigned short)((*(*src)++)&0x3f));
-        }
-        else{
-            utf16 |= ((unsigned short)((*(*src)++)&0x1f)) << 6;
-            utf16 |=  (unsigned short)((*(*src)++)&0x3f);
-        }
-    }
-    else{
-        utf16 |= (unsigned short)(*(*src)++);
-    }
-    
-    return utf16;
-}
