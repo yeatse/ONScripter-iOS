@@ -3,6 +3,7 @@
  *  LUAHandler.cpp - LUA handler for ONScripter
  *
  *  Copyright (c) 2001-2016 Ogapee. All rights reserved.
+ *            (C) 2014-2016 jh10001 <jh10001@live.cn>
  *
  *  ogapee@aqua.dti2.ne.jp
  *
@@ -24,6 +25,7 @@
 #include "LUAHandler.h"
 #include "ONScripter.h"
 #include "ScriptHandler.h"
+#include "Utils.h"
 
 #define ONS_LUA_HANDLER_PTR "ONS_LUA_HANDLER_PTR"
 #define INIT_SCRIPT "system.lua"
@@ -41,7 +43,7 @@ int NL_dofile(lua_State *state)
     
     unsigned long length = lh->sh->cBR->getFileLength(str);
     if (length == 0){
-        printf("cannot open %s\n", str);
+        utils::printInfo("cannot open %s\n", str);
         return 0;
     }
 
@@ -63,7 +65,7 @@ int NL_dofile(lua_State *state)
 
     if (luaL_loadbuffer(state, (const char*)buffer2, p2 - buffer2, str) || 
         lua_pcall(state, 0, 0, 0)){
-        printf("cannot parse %s %s\n", str, lua_tostring(state,-1));
+        utils::printInfo("cannot parse %s %s\n", str, lua_tostring(state, -1));
     }
 
     delete[] buffer;
@@ -303,10 +305,17 @@ int NSGetClick(lua_State *state)
         lua_pushboolean( state, true );
     else
         lua_pushboolean( state, false );
-    
+#if SDL_VERSION_ATLEAST(2, 0, 0)
     if (bs.event_button == SDL_MOUSEWHEEL)
         lua_pushinteger(state, bs.y);
     else
+#elif SDL_VERSION_ATLEAST(1, 2, 5)
+    if (bs.event_button == SDL_BUTTON_WHEELUP)
+        lua_pushinteger( state, 1 );
+    else if (bs.event_button == SDL_BUTTON_WHEELDOWN)
+        lua_pushinteger( state, -1 );
+    else
+#endif
         lua_pushinteger( state, 0 );
 
     if (bs.event_type == SDL_MOUSEBUTTONDOWN && bs.event_button == SDL_BUTTON_LEFT)
@@ -938,6 +947,35 @@ int lua_dummy(lua_State *state)
     return 0;
 }
 
+int NSSp2Visible(lua_State *state)
+{
+    lua_getglobal(state, ONS_LUA_HANDLER_PTR);
+    LUAHandler *lh = (LUAHandler*)lua_topointer(state, -1);
+
+    int no = luaL_checkinteger(state, 1);
+    int v  = lua_toboolean(state, 2);
+
+    sprintf(cmd_buf, "vsp2 %d, %d", no, v);
+    lh->sh->enterExternalScript(cmd_buf);
+    lh->ons->runScript();
+    lh->sh->leaveExternalScript();
+
+    return 0;
+}
+
+int NSDCopyToBg(lua_State *state)
+{
+    lua_getglobal(state, ONS_LUA_HANDLER_PTR);
+    LUAHandler *lh = (LUAHandler*)lua_topointer(state, -1);
+
+    sprintf(cmd_buf, "bgcpy");
+    lh->sh->enterExternalScript(cmd_buf);
+    lh->ons->runScript();
+    lh->sh->leaveExternalScript();
+
+    return 0;
+}
+
 #define LUA_FUNC_LUT(s) {#s, s}
 #define LUA_FUNC_LUT_DUMMY(s) {#s, lua_dummy}
 static const struct luaL_Reg lua_lut[] = {
@@ -994,8 +1032,14 @@ static const struct luaL_Reg lua_lut[] = {
     LUA_FUNC_LUT(NSSpLoad),
     LUA_FUNC_LUT(NSSpMove),
     LUA_FUNC_LUT(NSSpVisible),
+    LUA_FUNC_LUT(NSSp2Load),
+    LUA_FUNC_LUT(NSSp2Move),
+    LUA_FUNC_LUT(NSSp2Visible),
     LUA_FUNC_LUT(NSTimer),
     LUA_FUNC_LUT(NSUpdate),
+    LUA_FUNC_LUT(NSDCopyToBg),
+    LUA_FUNC_LUT(NSDDelete),
+    LUA_FUNC_LUT(NSDLoad),
     {NULL, NULL}
 };
 
@@ -1118,7 +1162,7 @@ void LUAHandler::loadInitScript()
 {
     unsigned long length = sh->cBR->getFileLength(INIT_SCRIPT);
     if (length == 0){
-        printf("cannot open %s\n", INIT_SCRIPT);
+        utils::printInfo("cannot open %s\n", INIT_SCRIPT);
         return;
     }
 

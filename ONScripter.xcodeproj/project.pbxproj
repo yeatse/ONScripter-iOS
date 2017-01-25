@@ -66,6 +66,8 @@
 		3862D2811E35246600B65552 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3862D26E1E351EE700B65552 /* AVFoundation.framework */; };
 		3878FBA21E352C2700555FB7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3878FBA11E352C2700555FB7 /* UIKit.framework */; };
 		3878FBA41E352C8900555FB7 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 3878FBA31E352C8900555FB7 /* libbz2.tbd */; };
+		38CC1DD11E389B8300BCF509 /* builtin_layer.h in Headers */ = {isa = PBXBuildFile; fileRef = 38CC1DCE1E389B8300BCF509 /* builtin_layer.h */; };
+		38CC1DD31E389B8300BCF509 /* Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 38CC1DD01E389B8300BCF509 /* Utils.h */; };
 		38E7F41A1E35F61B00825302 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38E7F4191E35F61B00825302 /* QuartzCore.framework */; };
 		38E7F41C1E35F62A00825302 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38E7F41B1E35F62A00825302 /* CoreGraphics.framework */; };
 		38E7F41F1E35F6A600825302 /* ONScripterExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 38E7F41D1E35F6A600825302 /* ONScripterExecutor.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -172,6 +174,8 @@
 		3862D27D1E3523D200B65552 /* libsmpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsmpeg.a; sourceTree = "<group>"; };
 		3878FBA11E352C2700555FB7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		3878FBA31E352C8900555FB7 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
+		38CC1DCE1E389B8300BCF509 /* builtin_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = builtin_layer.h; sourceTree = "<group>"; };
+		38CC1DD01E389B8300BCF509 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		38E7F4191E35F61B00825302 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		38E7F41B1E35F62A00825302 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		38E7F41D1E35F6A600825302 /* ONScripterExecutor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ONScripterExecutor.h; sourceTree = "<group>"; };
@@ -276,6 +280,8 @@
 				380C1FC61E33CC7F00CA2A87 /* ScriptHandler.h */,
 				380C1FC51E33CC7F00CA2A87 /* ScriptHandler.cpp */,
 				380C1FCC1E33CC7F00CA2A87 /* version.h */,
+				38CC1DCE1E389B8300BCF509 /* builtin_layer.h */,
+				38CC1DD01E389B8300BCF509 /* Utils.h */,
 				380C1F581E33901B00CA2A87 /* Info.plist */,
 			);
 			path = ONScripter;
@@ -348,6 +354,7 @@
 				38E7F41F1E35F6A600825302 /* ONScripterExecutor.h in Headers */,
 				380C1FF71E33CC7F00CA2A87 /* ScriptHandler.h in Headers */,
 				380C1FFD1E33CC7F00CA2A87 /* version.h in Headers */,
+				38CC1DD11E389B8300BCF509 /* builtin_layer.h in Headers */,
 				380C1FD91E33CC7F00CA2A87 /* FontInfo.h in Headers */,
 				380C1FDB1E33CC7F00CA2A87 /* LUAHandler.h in Headers */,
 				380C1FD71E33CC7F00CA2A87 /* DirtyRect.h in Headers */,
@@ -357,6 +364,7 @@
 				3846CC0D1E37BF2A00502BC9 /* sjis2utf16.h in Headers */,
 				380C1FF51E33CC7F00CA2A87 /* SarReader.h in Headers */,
 				380C1FEF1E33CC7F00CA2A87 /* ONScripter.h in Headers */,
+				38CC1DD31E389B8300BCF509 /* Utils.h in Headers */,
 				380C1FD21E33CC7F00CA2A87 /* ButtonLink.h in Headers */,
 				380C1FFA1E33CC7F00CA2A87 /* ScriptParser.h in Headers */,
 			);

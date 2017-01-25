@@ -3,6 +3,7 @@
  *  ScriptParser_command.cpp - Define command executer of ONScripter
  *
  *  Copyright (c) 2001-2016 Ogapee. All rights reserved.
+ *            (C) 2014-2016 jh10001 <jh10001@live.cn>
  *
  *  ogapee@aqua.dti2.ne.jp
  *
@@ -22,6 +23,7 @@
  */
 
 #include "ScriptParser.h"
+#include "Utils.h"
 #include <math.h>
 #if defined(LINUX) || defined(MACOSX) || defined(IOS)
 #include <sys/stat.h>
@@ -190,7 +192,7 @@ int ScriptParser::soundpressplginCommand()
     for (int i=0 ; i<12 ; i++)
         if (buf2[i] >= 'A' && buf2[i] <= 'Z') buf2[i] += 'a' - 'A';
     if (strncmp(buf2, "nbzplgin.dll", 12)){
-        fprintf( stderr, " *** plugin %s is not available, ignored. ***\n", buf);
+        utils::printError( " *** plugin %s is not available, ignored. ***\n", buf);
         return RET_CONTINUE;
     }
 
@@ -240,15 +242,48 @@ int ScriptParser::shadedistanceCommand()
     return RET_CONTINUE;
 }
 
+#ifdef USE_BUILTIN_LAYER_EFFECTS
+#include "builtin_layer.h"
+#endif
+
 int ScriptParser::setlayerCommand()
 {
     if ( current_mode != DEFINE_MODE )
         errorAndExit( "setlayer: not in the define section" );
 
     int no = script_h.readInt();
-    layer_info[no].duration = script_h.readInt();
-    setStr(&layer_info[no].str, script_h.readStr());
-    
+    int interval = script_h.readInt();
+    const char *dll = script_h.readStr();
+
+    #ifndef USE_BUILTIN_LAYER_EFFECTS
+    utils::printError("setlayer: layer effect support not available (%d,%d,'%s')",
+        no, interval, dll);
+    return RET_CONTINUE;
+    #else
+    LayerInfo *layer = &layer_info[no];
+    layer->interval = interval;
+    if (layer->handler) delete layer->handler;
+    layer->handler = NULL;
+    Layer *handler = NULL;
+    const char *bslash = strrchr(dll, '\\');
+    if ((bslash && !strncmp(bslash + 1, "oldmovie.dll", 12)) ||
+        !strncmp(dll, "oldmovie.dll", 12)) {
+        handler = new OldMovieLayer(screen_width, screen_height);
+    } else if ((bslash && !strncmp(bslash + 1, "snow.dll", 8)) ||
+        !strncmp(dll, "snow.dll", 8)) {
+        handler = new FuruLayer(screen_width, screen_height, false, script_h.cBR);
+    } else if ((bslash && !strncmp(bslash + 1, "hana.dll", 8)) ||
+        !strncmp(dll, "hana.dll", 8)) {
+        handler = new FuruLayer(screen_width, screen_height, true, script_h.cBR);
+    } else {
+        utils::printError("setlayer: layer effect '%s' is not implemented.", dll);
+        return RET_CONTINUE;
+    }
+
+    utils::printInfo("Setup layer effect for '%s'.\n", dll);
+    layer->handler = handler;
+    #endif // ndef USE_BUILTIN_LAYER_EFFECTS
+
     return RET_CONTINUE;
 }
 
@@ -494,7 +529,7 @@ int ScriptParser::nsaCommand()
     delete script_h.cBR;
     script_h.cBR = new NsaReader( nsa_offset, archive_path, BaseReader::ARCHIVE_TYPE_NSA|BaseReader::ARCHIVE_TYPE_NS2, key_table );
     if ( script_h.cBR->open( nsa_path ) ){
-        fprintf( stderr, " *** failed to open nsa or ns2 archive, ignored.  ***\n");
+        utils::printError(" *** failed to open nsa or ns2 archive, ignored.  ***\n");
     }
 
     return RET_CONTINUE;
@@ -575,6 +610,15 @@ int ScriptParser::movCommand()
         setStr( &script_h.getVariableData(script_h.pushed_variable.var_no).str, buf );
     }
     else errorAndExit( "mov: no variable" );
+    
+    return RET_CONTINUE;
+}
+
+int ScriptParser::mode_wave_demoCommand()
+{
+    if (current_mode != DEFINE_MODE)
+        errorAndExit("mode_wave_demo: not in the define section");
+    mode_wave_demo_flag = true;
     
     return RET_CONTINUE;
 }
@@ -860,7 +904,7 @@ int ScriptParser::incCommand()
 
 int ScriptParser::ifCommand()
 {
-    //printf("ifCommand\n");
+    //utils::printInfo("ifCommand\n");
     int condition_status = 0; // 0 ... none, 1 ... and, 2 ... or
     bool f = false, condition_flag = false;
     char *op_buf;
@@ -874,20 +918,20 @@ int ScriptParser::ifCommand()
             script_h.readLabel();
             buf = script_h.readStr();
             f = (script_h.findAndAddLog( script_h.log_info[ScriptHandler::FILE_LOG], buf, false ) != NULL);
-            //printf("fchk %s(%d) ", tmp_string_buffer, (findAndAddFileLog( tmp_string_buffer, fasle )) );
+            //utils::printInfo("fchk %s(%d) ", tmp_string_buffer, (findAndAddFileLog( tmp_string_buffer, fasle )) );
         }
         else if (script_h.compareString("lchk")){
             script_h.readLabel();
             buf = script_h.readStr();
             f = (script_h.findAndAddLog( script_h.log_info[ScriptHandler::LABEL_LOG], buf+1, false ) != NULL);
-            //printf("lchk %s (%d)\n", buf, f );
+            //utils::printInfo("lchk %s (%d)\n", buf, f );
         }
         else{
             int no = script_h.readInt();
             if (script_h.current_variable.type & ScriptHandler::VAR_INT ||
                 script_h.current_variable.type & ScriptHandler::VAR_ARRAY){
                 int left_value = no;
-                //printf("left (%d) ", left_value );
+                //utils::printInfo("left (%d) ", left_value );
 
                 op_buf = script_h.getNext();
                 if ( (op_buf[0] == '>' && op_buf[1] == '=') ||
@@ -900,10 +944,10 @@ int ScriptParser::ifCommand()
                           op_buf[0] == '>' ||
                           op_buf[0] == '=' )
                     script_h.setCurrent(op_buf+1);
-                //printf("current %c%c ", op_buf[0], op_buf[1] );
+                //utils::printInfo("current %c%c ", op_buf[0], op_buf[1] );
 
                 int right_value = script_h.readInt();
-                //printf("right (%d) ", right_value );
+                //utils::printInfo("right (%d) ", right_value );
 
                 if      (op_buf[0] == '>' && op_buf[1] == '=') f = (left_value >= right_value);
                 else if (op_buf[0] == '<' && op_buf[1] == '=') f = (left_value <= right_value);
@@ -1405,12 +1449,12 @@ int ScriptParser::arcCommand()
         delete script_h.cBR;
         script_h.cBR = new SarReader( archive_path, key_table );
         if ( script_h.cBR->open( buf2 ) ){
-            fprintf( stderr, " *** failed to open archive %s, ignored.  ***\n", buf2 );
+            utils::printError( " *** failed to open archive %s, ignored.  ***\n", buf2 );
         }
     }
     else if ( strcmp( script_h.cBR->getArchiveName(), "sar" ) == 0 ){
         if ( script_h.cBR->open( buf2 ) ){
-            fprintf( stderr, " *** failed to open archive %s, ignored.  ***\n", buf2 );
+            utils::printError( " *** failed to open archive %s, ignored.  ***\n", buf2 );
         }
     }
     // skip "arc" commands after "ns?" command

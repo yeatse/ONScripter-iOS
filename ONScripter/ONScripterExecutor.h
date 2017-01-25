@@ -15,31 +15,35 @@ FOUNDATION_EXPORT const unsigned char ONScripterVersionString[];
 typedef NS_ENUM(NSInteger, ONSExecuteErrorCode) {
     ONSExecuteNoError,
     ONSExecuteInitializationError,
-    ONSExecuteScriptError,
+    ONSExecuteCantOpenScript,
+    ONSExecuteRuntimeError,
     ONSExecuteStillRunning
+};
+
+typedef NS_ENUM(NSInteger, ONScripterEncoding) {
+    ONScripterSJISEncoding,
+    ONScripterGBKEncoding
 };
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ONSConfiguration : NSObject<NSCopying>
+@interface ONScripterConfiguration : NSObject
 
 @property (nonatomic) NSString *archivePath;
-
 @property (nonatomic) NSString *savePath;
+@property (nonatomic) ONScripterEncoding encoding;
 
-- (instancetype)initWithArchivePath:(NSString *)archivePath savePath:(NSString *)savePath;
+- (instancetype)initWithArchivePath:(NSString *)archivePath savePath:(NSString *)savePath encoding:(ONScripterEncoding)encoding;
 
 @end
 
 @interface ONScripterExecutor : NSObject
 
-- (instancetype)initWithConfiguration:(ONSConfiguration *)configuration;
++ (instancetype)sharedExecutor;
 
-- (ONSExecuteErrorCode)exec;
+- (ONSExecuteErrorCode)executeWithConfiguration:(ONScripterConfiguration *)configuration;
 
 - (void)quit;
-
-- (instancetype)init NS_UNAVAILABLE;
 
 @end
 

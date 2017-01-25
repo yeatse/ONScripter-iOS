@@ -3,6 +3,7 @@
  *  ONScripter.h - Execution block parser of ONScripter
  *
  *  Copyright (c) 2001-2016 Ogapee. All rights reserved.
+ *            (C) 2014-2016 jh10001 <jh10001@live.cn>
  *
  *  ogapee@aqua.dti2.ne.jp
  *
@@ -57,7 +58,6 @@
 #define DEFAULT_WM_TITLE "ONScripter"
 #define DEFAULT_WM_ICON  "ONScripter"
 
-
 class ONScripter : public ScriptParser
 {
 public:
@@ -70,8 +70,7 @@ public:
         char str[16];
         bool down_flag;
     };
-    
-    ONScripter(SDL_Window *window, SDL_Renderer *renderer);
+        
     ONScripter();
     ~ONScripter();
 
@@ -86,17 +85,24 @@ public:
     void setSaveDir(const char *path);
     void setFullscreenMode();
     void setWindowMode();
+    void setCompatibilityMode();
+    void setFontCache();
+    void setDebugLevel(int debug);
     void enableButtonShortCut();
     void enableWheelDownAdvance();
     void disableRescale();
     void renderFontOutline();
     void enableEdit();
     void setKeyEXE(const char *path);
+    const char* getArchivePath() { return archive_path; };
     int  getWidth(){ return screen_width;};
     int  getHeight(){return screen_height;};
     ButtonState &getCurrentButtonState(){return current_button_state;};
     int  getSkip(){return automode_flag?2:((skip_mode&SKIP_NORMAL)?1:0);};
     AnimationInfo *getSMPEGInfo(){return smpeg_info;};
+#ifdef USE_SDL_RENDERER
+    SDL_Window *getWindow(){ return window; };
+#endif
     
     int  openScript();
     int  init();
@@ -245,6 +251,7 @@ public:
     int getcselstrCommand();
     int getcselnumCommand();
     int gameCommand();
+    int flushoutCommand();
     int fileexistCommand();
     int exec_dllCommand();
     int exbtnCommand();
@@ -262,6 +269,7 @@ public:
     int drawbg2Command();
     int drawbgCommand();
     int drawCommand();
+    int deletescreenshotCommand();
     int delayCommand();
     int defineresetCommand();
     int cspCommand();
@@ -323,6 +331,7 @@ private:
 
     bool is_script_read;
     char *wm_title_string;
+    char *wm_icon_string;
     char wm_edit_string[256];
     bool fullscreen_mode;
     bool window_mode;
@@ -338,9 +347,12 @@ private:
     bool disable_rescale_flag;
     bool edit_flag;
     char *key_exe_file;
+    bool compatibilityMode;
+    bool cacheFont = false;
 
     // variables relevant to button
     ButtonState current_button_state, last_mouse_state;
+
     ButtonLink root_button_link, *current_button_link, exbtn_d_button_link;
     bool is_exbtn_enabled;
 
@@ -394,7 +406,7 @@ private:
     NestInfo select_label_info;
     int  shortcut_mouse_line;
 
-    void initDimensions();
+    int initSDL();
     void calcRenderRect();
     void openAudio(int freq=-1);
     void reset(); // called on definereset
@@ -402,16 +414,18 @@ private:
     void resetSentenceFont();
     void flush( int refresh_mode, SDL_Rect *rect=NULL, bool clear_dirty_flag=true, bool direct_flag=false );
     void flushDirect( SDL_Rect &rect, int refresh_mode );
-    void mouseOverCheck( int x, int y );
 #if defined(USE_SMPEG) && defined(USE_SDL_RENDERER)
     void flushDirectYUV(SMPEG_Info *info);
 #endif
+    void mouseOverCheck( int x, int y );
+    void warpMouse(int x, int y);
     void setFullScreen(bool fullscreen);
 public:
-    void executeLabel();
+    int executeLabel();
     void runScript();
     AnimationInfo *getSpriteInfo(int no){ return &sprite_info[no]; };
     AnimationInfo *getSprite2Info(int no){ return &sprite2_info[no]; };
+    Uint32 getTextureFormat() { return texture_format; };
 private:
     int  parseLine();
     void deleteButtonLink();
@@ -486,6 +500,20 @@ private:
     void initBreakup( char *params );
     void effectBreakup( char *params, int duration );
 
+#ifdef USE_BUILTIN_EFFECTS
+    //cascade
+    void effectCascade(char *params, int duration);
+
+    //trig
+    int *sin_table, *cos_table;
+    void buildSinTable();
+    void buildCosTable();
+    void effectTrvswave(char *params, int duration);
+    int *whirl_table;
+    void buildWhirlTable();
+    void effectWhirl(char *params, int duration);
+#endif
+
     // ----------------------------------------
     // variables and methods relevant to event
     enum { NOT_EDIT_MODE            = 0,
@@ -517,14 +545,18 @@ private:
     bool trapHandler();
     bool mouseMoveEvent( SDL_MouseMotionEvent *event );
     bool mousePressEvent( SDL_MouseButtonEvent *event );
+#if SDL_VERSION_ATLEAST(2,0,0)
     bool mouseWheelEvent(SDL_MouseWheelEvent *event);
+#endif
     void variableEditMode( SDL_KeyboardEvent *event );
     void shiftCursorOnButton( int diff );
     bool keyDownEvent( SDL_KeyboardEvent *event );
     void keyUpEvent( SDL_KeyboardEvent *event );
     bool keyPressEvent( SDL_KeyboardEvent *event );
     void timerEvent(bool init_flag);
+#if (defined(IOS) || defined(ANDROID) || defined(WINRT)) && SDL_VERSION_ATLEAST(2, 0, 0)
     bool convTouchKey(SDL_TouchFingerEvent &finger);
+#endif
     void runEventLoop();
 
     // ----------------------------------------
@@ -560,6 +592,7 @@ private:
     SDL_Renderer *renderer;
     SDL_Texture *texture;
 #endif
+    void setCaption(const char *title, const char *iconstr = NULL);
     // format = SDL_PIXELFORMAT_ABGR8888 for OpenGL ES 1.x, OpenGL ES 2.x (Android, iOS)
     // format = SDL_PIXELFORMAT_ARGB8888 for OpenGL, Direct3D (Windows, Linux, MacOSX) or for any 32bit surface without SDL_Renderer
     // format = SDL_PIXELFORMAT_RGB565 for any 16bit surface without SDL_Renderer (Android, Zaurus)
@@ -569,9 +602,13 @@ private:
     SDL_Surface *screen_surface; // Text + Select_image + Tachi image + background
     SDL_Surface *effect_dst_surface; // Intermediate source buffer for effect
     SDL_Surface *effect_src_surface; // Intermediate destnation buffer for effect
+    SDL_Surface *effect_tmp_surface; // Intermediate buffer for effect
     SDL_Surface *screenshot_surface; // Screenshot
     int screenshot_w, screenshot_h;
     SDL_Surface *image_surface; // Reference for loadImage()
+    int max_texture_width, max_texture_height;
+    SDL_Texture *blt_texture;
+    SDL_Rect blt_texture_src_rect;
 
     unsigned char *tmp_image_buf;
     unsigned long tmp_image_buf_length;
@@ -586,8 +623,8 @@ private:
     SDL_Surface *createSurfaceFromFile(char *filename,bool *has_alpha, int *location);
 
     int  resizeSurface( SDL_Surface *src, SDL_Surface *dst );
-    void alphaBlend( SDL_Surface *mask_surface,
-                     int trans_mode, Uint32 mask_value = 255, SDL_Rect *clip=NULL );
+    void alphaBlend(SDL_Surface *mask_surface, int trans_mode, Uint32 mask_value = 255, SDL_Rect *clip = NULL,
+        SDL_Surface *src1 = NULL, SDL_Surface *src2 = NULL, SDL_Surface *dst = NULL);
     void alphaBlendText( SDL_Surface *dst_surface, SDL_Rect dst_rect,
                          SDL_Surface *src_surface, SDL_Color &color, SDL_Rect *clip, bool rotate_flag );
     void makeNegaSurface( SDL_Surface *surface, SDL_Rect &clip );
@@ -710,6 +747,8 @@ private:
     };
     int  skip_mode;
 
+    int effect_tmp; //tmp variable for use by effect routines
+
     enum { TRAP_NONE        = 0,
            TRAP_LEFT_CLICK  = 1,
            TRAP_RIGHT_CLICK = 2,
@@ -734,6 +773,7 @@ private:
     AnimationInfo text_info;
     AnimationInfo sentence_font_info;
     char *font_file;
+    void *font_cache = NULL;
     int erase_text_window_mode;
     bool text_on_flag; // suppress the effect of erase_text_window_mode
     bool draw_cursor_flag;

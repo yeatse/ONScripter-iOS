@@ -3,6 +3,7 @@
  *  ONScripter_lut.cpp - command lookup-table for ONScripter
  *
  *  Copyright (c) 2001-2016 Ogapee. All rights reserved.
+ *            (C) 2014-2016 jh10001 <jh10001@live.cn>
  *
  *  ogapee@aqua.dti2.ne.jp
  *
@@ -177,6 +178,7 @@ static ONScripter::FuncLUT func_lut[] = {
     {"mov10",			&ONScripter::movCommand},
     {"mov",				&ONScripter::movCommand},
     {"monocro",			&ONScripter::monocroCommand},
+    {"mode_wave_demo",	&ONScripter::mode_wave_demoCommand},
     {"mode_saya",		&ONScripter::mode_sayaCommand},
     {"mode_ext",		&ONScripter::mode_extCommand},
     {"mod",				&ONScripter::modCommand},
@@ -288,6 +290,7 @@ static ONScripter::FuncLUT func_lut[] = {
     {"for",				&ONScripter::forCommand},
     {"filelog",			&ONScripter::filelogCommand},
     {"fileexist",		&ONScripter::fileexistCommand},
+    {"flushout",		&ONScripter::flushoutCommand},
 
     {"existspbtn",		&ONScripter::spbtnCommand},
     {"exec_dll",		&ONScripter::exec_dllCommand},
@@ -317,6 +320,7 @@ static ONScripter::FuncLUT func_lut[] = {
     {"draw",			&ONScripter::drawCommand},
     {"div",				&ONScripter::divCommand},
     {"dim",				&ONScripter::dimCommand},
+    {"deletescreenshot",&ONScripter::deletescreenshotCommand},
     {"delay",			&ONScripter::delayCommand},
     {"defvoicevol",		&ONScripter::defvoicevolCommand},
     {"defsub",			&ONScripter::defsubCommand},

@@ -3,6 +3,7 @@
  *  ScriptParser.cpp - Define block parser of ONScripter
  *
  *  Copyright (c) 2001-2016 Ogapee. All rights reserved.
+ *            (C) 2014-2016 jh10001 <jh10001@live.cn>
  *
  *  ogapee@aqua.dti2.ne.jp
  *
@@ -22,16 +23,23 @@
  */
 
 #include "ScriptParser.h"
-#ifdef ANDROID
-extern "C"
-{
-#include <jni.h>
-#include <android/log.h>
+#include "Utils.h"
+#ifdef USE_BUILTIN_LAYER_EFFECTS
+#include "builtin_layer.h"
+LayerInfo layer_info[MAX_LAYER_NUM];
+
+void deleteLayerInfo() {
+    for (int i=0; i<MAX_LAYER_NUM; ++i) {
+        if (layer_info[i].handler) {
+            delete layer_info[i].handler;
+            layer_info[i].handler = NULL;
+        }
+    }
 }
 #endif
 
 #define VERSION_STR1 "ONScripter"
-#define VERSION_STR2 "Copyright (C) 2001-2016 Studio O.G.A. All Rights Reserved."
+#define VERSION_STR2 "Copyright (C) 2001-2016 Studio O.G.A. All Rights Reserved.\n          (C) 2014-2016 jh10001"
 
 #define DEFAULT_SAVE_MENU_NAME coding2utf16->DEFAULT_SAVE_MENU_NAME
 #define DEFAULT_LOAD_MENU_NAME coding2utf16->DEFAULT_LOAD_MENU_NAME
@@ -42,6 +50,8 @@ extern "C"
 #define DEFAULT_TEXT_SPEED_HIGHT  10
 
 #define MAX_PAGE_LIST 16
+
+extern int ONSRunLoopShouldQuit;
 
 ScriptParser::ScriptParser()
 {
@@ -136,6 +146,7 @@ void ScriptParser::reset()
     windowback_flag = false;
     usewheel_flag = false;
     useescspc_flag = false;
+    mode_wave_demo_flag = false;
     mode_saya_flag = false;
     mode_ext_flag = false;
     sentence_font.rubyon_flag = false;
@@ -256,6 +267,10 @@ void ScriptParser::reset()
     last_effect_link->next = NULL;
 
     current_mode = DEFINE_MODE;
+
+#ifdef USE_BUILTIN_LAYER_EFFECTS
+    deleteLayerInfo();
+#endif
 }
 
 int ScriptParser::openScript()
@@ -318,7 +333,7 @@ int ScriptParser::getSystemCallNo( const char *buffer )
     else if ( !strcmp( buffer, "automode" ) )    return SYSTEM_AUTOMODE;
     else if ( !strcmp( buffer, "end" ) )         return SYSTEM_END;
     else{
-        printf("Unsupported system call %s\n", buffer );
+        utils::printInfo("Unsupported system call %s\n", buffer );
         return -1;
     }
 }
@@ -557,8 +572,8 @@ void ScriptParser::writeLog( ScriptHandler::LogInfo &info )
     }
 
     if (saveFileIOBuf( info.filename )){
-        fprintf( stderr, "can't write %s\n", info.filename );
-        exit( -1 );
+        utils::printError("can't write %s\n", info.filename );
+        ONSRunLoopShouldQuit = -1;
     }
 }
 
@@ -587,19 +602,17 @@ void ScriptParser::readLog( ScriptHandler::LogInfo &info )
 
 void ScriptParser::errorAndExit( const char *str, const char *reason )
 {
-#ifdef ANDROID
-    __android_log_print( ANDROID_LOG_ERROR, "ONS",
-                         " *** Error at %s:%d [%s]; %s ***\n",
-                         current_label_info.name,
-                         current_line,
-                         str, reason?reason:"" );
-#else    
-    fprintf( stderr, " *** Error at %s:%d [%s]; %s ***\n",
-             current_label_info.name,
-             current_line,
-             str, reason?reason:"" );
-#endif    
-    exit(-1);
+    if ( reason )
+        utils::printError(" *** Parse error at %s:%d [%s]; %s ***\n",
+                 current_label_info.name,
+                 current_line,
+                 str, reason );
+    else
+        utils::printError( " *** Parse error at %s:%d [%s] ***\n",
+                 current_label_info.name,
+                 current_line,
+                 str );
+    ONSRunLoopShouldQuit = -1;
 }
 
 void ScriptParser::deleteNestInfo()
@@ -678,11 +691,11 @@ int ScriptParser::readEffect( EffectLink *effect )
             effect->anim.remove();
     }
     else if (effect->effect < 0 || effect->effect > 255){
-        fprintf(stderr, "Effect %d is out of range and is switched to 0.\n", effect->effect);
+        utils::printError( "Effect %d is out of range and is switched to 0.\n", effect->effect);
         effect->effect = 0; // to suppress error
     }
 
-    //printf("readEffect %d: %d %d %s\n", num, effect->effect, effect->duration, effect->anim.image_name );
+    //utils::printInfo("readEffect %d: %d %d %s\n", num, effect->effect, effect->duration, effect->anim.image_name );
     return num;
 }
 
@@ -701,8 +714,8 @@ ScriptParser::EffectLink *ScriptParser::parseEffect(bool init_flag)
         link = link->next;
     }
 
-    fprintf(stderr, "Effect No. %d is not found.\n", tmp_effect.effect);
-    exit(-1);
+    utils::printError( "Effect No. %d is not found.\n", tmp_effect.effect);
+    ONSRunLoopShouldQuit = -1;
 
     return NULL;
 }
@@ -718,7 +731,7 @@ void ScriptParser::createKeyTable( const char *key_exe )
     
     FILE *fp = ::fopen(key_exe, "rb");
     if (fp == NULL){
-        fprintf(stderr, "createKeyTable: can't open EXE file %s\n", key_exe);
+        utils::printError( "createKeyTable: can't open EXE file %s\n", key_exe);
         return;
     }
 

@@ -3,6 +3,7 @@
  *  ONScripter_sound.cpp - Methods for playing sound
  *
  *  Copyright (c) 2001-2016 Ogapee. All rights reserved.
+ *            (C) 2014-2016 jh10001 <jh10001@live.cn>
  *
  *  ogapee@aqua.dti2.ne.jp
  *
@@ -22,9 +23,13 @@
  */
 
 #include "ONScripter.h"
+#include "Utils.h"
 #include <new>
 #if defined(LINUX)
 #include <signal.h>
+#endif
+#if !defined(WINRT) && (defined(WIN32) || defined(_WIN32))
+#include <stdlib.h>
 #endif
 
 #ifdef ANDROID
@@ -66,6 +71,11 @@ int ONScripter::playSound(const char *filename, int format, bool loop_flag, int 
 
     long length = script_h.cBR->getFileLength( filename );
     if (length == 0) return SOUND_NONE;
+    if (!mode_wave_demo_flag &&
+        ((skip_mode & SKIP_NORMAL) || ctrl_pressed_status) && (format & SOUND_CHUNK) &&
+        ((channel < ONS_MIX_CHANNELS) || (channel == MIX_WAVE_CHANNEL))) {
+           return SOUND_NONE;
+    }
 
     unsigned char *buffer;
 
@@ -77,25 +87,35 @@ int ONScripter::playSound(const char *filename, int format, bool loop_flag, int 
     else{
         buffer = new(std::nothrow) unsigned char[length];
         if (buffer == NULL){
-            fprintf( stderr, "failed to load [%s] because file size [%lu] is too large.\n", filename, length);
+            utils::printError("failed to load [%s] because file size [%lu] is too large.\n", filename, length);
             return SOUND_NONE;
         }
         script_h.cBR->getFile( filename, buffer );
     }
     
     if (format & SOUND_MUSIC){
-        music_info = Mix_LoadMUS_RW(SDL_RWFromMem(buffer, length), SDL_FALSE);
+#if SDL_MIXER_MAJOR_VERSION >= 2
+        music_info = Mix_LoadMUS_RW( SDL_RWFromMem( buffer, length ), SDL_FALSE);
+#else
+        music_info = Mix_LoadMUS_RW(SDL_RWFromMem(buffer, length));
+#endif
+        if (music_info == NULL) {
+            utils::printError("can't load music \"%s\": %s\n", filename, Mix_GetError());
+        }
         Mix_VolumeMusic( music_volume );
-        Mix_HookMusicFinished( musicFinishCallback );
         if ( Mix_PlayMusic( music_info, (music_play_loop_flag&&music_loopback_offset==0.0)?-1:0 ) == 0 ){
             music_buffer = buffer;
             music_buffer_length = length;
             return SOUND_MUSIC;
         }
+        Mix_HookMusicFinished(musicFinishCallback);
     }
     
     if (format & SOUND_CHUNK){
         Mix_Chunk *chunk = Mix_LoadWAV_RW(SDL_RWFromMem(buffer, length), 1);
+        if (chunk == NULL) {
+            utils::printError("can't load chunk \"%s\": %s\n", filename, Mix_GetError());
+        }
         if (playWave(chunk, format, loop_flag, channel) == 0){
             delete[] buffer;
             return SOUND_CHUNK;
@@ -112,7 +132,7 @@ int ONScripter::playSound(const char *filename, int format, bool loop_flag, int 
     if (format & SOUND_MIDI){
         FILE *fp;
         if ( (fp = fopen(TMP_MUSIC_FILE, "wb", true)) == NULL){
-            fprintf(stderr, "can't open temporaly MIDI file %s\n", TMP_MUSIC_FILE);
+            utils::printError("can't open temporaly MIDI file %s\n", TMP_MUSIC_FILE);
         }
         else{
             fwrite(buffer, 1, length, fp);
@@ -200,7 +220,7 @@ int ONScripter::playMPEG(const char *filename, bool click_flag, bool loop_flag)
 {
     unsigned long length = script_h.cBR->getFileLength( filename );
     if (length == 0){
-        fprintf( stderr, " *** can't find file [%s] ***\n", filename );
+        utils::printError(" *** can't find file [%s] ***\n", filename );
         return 0;
     }
 
@@ -245,13 +265,9 @@ int ONScripter::playMPEG(const char *filename, bool click_flag, bool loop_flag)
     }
     SMPEG_enablevideo( layer_smpeg_sample, 1 );
     
-#if defined(USE_SDL_RENDERER)
     SMPEG_setdisplay(layer_smpeg_sample, NULL, NULL, NULL);
     SDL_mutex *mutex = SDL_CreateMutex();
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_TARGET, info.width, info.height);
-#else
-    SMPEG_setdisplay( layer_smpeg_sample, screen_surface, NULL,  NULL );
-#endif
     SMPEG_setvolume( layer_smpeg_sample, music_volume );
     SMPEG_loop( layer_smpeg_sample, loop_flag?1:0 );
 
@@ -284,24 +300,25 @@ int ONScripter::playMPEG(const char *filename, bool click_flag, bool loop_flag)
                 break;
             }
         }
-        
-#if defined(USE_SDL_RENDERER)
         SDL_mutexP(mutex);
         flushDirectYUV(&info);
-        SDL_mutexP(mutex);
-#endif
+        SDL_mutexV(mutex);
         SDL_Delay( 1 );
     }
-
     stopSMPEG();
     Mix_HookMusic( NULL, NULL );
     openAudio();
-#if defined(USE_SDL_RENDERER)
     SDL_DestroyMutex(mutex);
     texture = SDL_CreateTextureFromSurface(renderer, accumulation_surface);
-#endif
+#elif !defined(WINRT) && (defined(WIN32) || defined(_WIN32))
+    char filename2[256];
+    strcpy(filename2, filename);
+    for (unsigned int i=0; i<strlen(filename2); i++)
+        if (filename2[i] == '/' || filename2[i] == '\\')
+            filename2[i] = DELIMITER;
+    system(filename2);
 #elif !defined(IOS)
-    fprintf( stderr, "mpegplay command is disabled.\n" );
+    utils::printError( "mpegplay command is disabled.\n" );
 #endif
 
     return ret;
@@ -311,7 +328,7 @@ int ONScripter::playAVI( const char *filename, bool click_flag )
 {
     unsigned long length = script_h.cBR->getFileLength( filename );
     if (length == 0){
-        fprintf( stderr, " *** can't find file [%s] ***\n", filename );
+        utils::printError( " *** can't find file [%s] ***\n", filename );
         return 0;
     }
 
@@ -342,8 +359,10 @@ int ONScripter::playAVI( const char *filename, bool click_flag )
         Mix_CloseAudio();
         openAudio();
     }
+#elif !defined(WINRT) && (defined(WIN32) || defined(_WIN32))
+    system(filename);
 #else
-    fprintf( stderr, "avi command is disabled.\n" );
+    utils::printError( "avi command is disabled.\n" );
 #endif
 
     return 0;

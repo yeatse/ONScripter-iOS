@@ -3,6 +3,7 @@
  *  ScriptParser.h - Define block parser of ONScripter
  *
  *  Copyright (c) 2001-2016 Ogapee. All rights reserved.
+ *            (C) 2014-2016 jh10001 <jh10001@live.cn>
  *
  *  ogapee@aqua.dti2.ne.jp
  *
@@ -39,6 +40,10 @@
 #include "LUAHandler.h"
 #endif
 #include "coding2utf16.h"
+#ifdef USE_BUILTIN_LAYER_EFFECTS
+#include "builtin_layer.h"
+#endif
+
 extern Coding2UTF16 *coding2utf16;
 
 #ifndef M_PI
@@ -55,9 +60,6 @@ extern Coding2UTF16 *coding2utf16;
 
 #define DEFAULT_START_KINSOKU coding2utf16->DEFAULT_START_KINSOKU
 #define DEFAULT_END_KINSOKU   coding2utf16->DEFAULT_END_KINSOKU
-
-
-#define MAX_LAYER_NUM 32
 
 typedef unsigned char uchar3[3];
 
@@ -114,6 +116,7 @@ public:
     int nextCommand();
     int mulCommand();
     int movCommand();
+    int mode_wave_demoCommand();
     int mode_sayaCommand();
     int mode_extCommand();
     int modCommand();
@@ -249,6 +252,7 @@ protected:
     bool windowback_flag;
     bool usewheel_flag;
     bool useescspc_flag;
+    bool mode_wave_demo_flag;
     bool mode_saya_flag;
     bool mode_ext_flag;
     bool force_button_shortcut_flag;
@@ -272,7 +276,10 @@ protected:
     int screen_width, screen_height;
     int screen_device_width, screen_device_height;
     int device_width, device_height;
+    float screen_scale_ratio1, screen_scale_ratio2;
     SDL_Rect screen_rect;
+    SDL_Rect render_view_rect;
+    int screen_bpp;
     char *version_str;
     int underline_value;
     char *save_dir_envdata;
@@ -281,19 +288,6 @@ protected:
     void setStr( char **dst, const char *src, int num=-1 );
     
     void readToken();
-
-    /* ---------------------------------------- */
-    /* Layer related variables */
-    struct LayerInfo{
-        int sprite_num;
-        int duration;
-        char *str;
-        LayerInfo(){
-            sprite_num = 0;
-            duration = 0;
-            str = NULL;
-        };
-    } layer_info[MAX_LAYER_NUM];
     
     /* ---------------------------------------- */
     /* Effect related variables */
