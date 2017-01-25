@@ -364,8 +364,7 @@ ONScripter::~ONScripter()
 
     delete[] sprite_info;
     delete[] sprite2_info;
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
+    freeResources();
 }
 
 void ONScripter::enableCDAudio(){
@@ -484,6 +483,7 @@ int ONScripter::init()
     if (initSDL()) return -1;
     openAudio();
 
+    ONSRunLoopShouldQuit = 0;
     image_surface        = AnimationInfo::alloc32bitSurface( 1, 1, texture_format );
     accumulation_surface = AnimationInfo::allocSurface( screen_width, screen_height, texture_format );
     backup_surface       = AnimationInfo::allocSurface( screen_width, screen_height, texture_format );
@@ -785,6 +785,18 @@ void ONScripter::resetSentenceFont()
 
     sentence_font.old_xy[0] = sentence_font.x(false);
     sentence_font.old_xy[1] = sentence_font.y(false);
+}
+    
+void ONScripter::freeResources()
+{
+    SDL_FreeSurface(image_surface); image_surface = NULL;
+    SDL_FreeSurface(accumulation_surface); accumulation_surface = NULL;
+    SDL_FreeSurface(backup_surface); backup_surface = NULL;
+    SDL_FreeSurface(effect_src_surface); effect_src_surface = NULL;
+    SDL_FreeSurface(effect_dst_surface); effect_dst_surface = NULL;
+    SDL_FreeSurface(effect_tmp_surface); effect_tmp_surface = NULL;
+    SDL_DestroyRenderer(renderer); renderer = NULL;
+    SDL_DestroyWindow(window); window = NULL;
 }
 
 void ONScripter::flush( int refresh_mode, SDL_Rect *rect, bool clear_dirty_flag, bool direct_flag )
