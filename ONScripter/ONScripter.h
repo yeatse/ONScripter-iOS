@@ -95,6 +95,10 @@ public:
     ButtonState &getCurrentButtonState(){return current_button_state;};
     int  getSkip(){return automode_flag?2:((skip_mode&SKIP_NORMAL)?1:0);};
     AnimationInfo *getSMPEGInfo(){return smpeg_info;};
+#ifdef USE_SDL_RENDERER
+    SDL_Window *getWindow(){ return window; }
+#endif
+    
     
     int  openScript();
     int  init();
@@ -321,6 +325,7 @@ private:
 
     bool is_script_read;
     char *wm_title_string;
+    char *wm_icon_string;
     char wm_edit_string[256];
     bool fullscreen_mode;
     bool window_mode;
@@ -393,20 +398,18 @@ private:
     int  shortcut_mouse_line;
 
     void initSDL();
-    void calcRenderRect();
     void openAudio(int freq=-1);
     void reset(); // called on definereset
     void resetSub(); // called on reset
     void resetSentenceFont();
     void flush( int refresh_mode, SDL_Rect *rect=NULL, bool clear_dirty_flag=true, bool direct_flag=false );
     void flushDirect( SDL_Rect &rect, int refresh_mode );
-    void mouseOverCheck( int x, int y );
 #if defined(USE_SMPEG) && defined(USE_SDL_RENDERER)
     void flushDirectYUV(SMPEG_Info *info);
 #endif
-    void setFullScreen(bool fullscreen);
+    void mouseOverCheck( int x, int y );
 public:
-    void executeLabel();
+    int executeLabel();
     void runScript();
     AnimationInfo *getSpriteInfo(int no){ return &sprite_info[no]; };
     AnimationInfo *getSprite2Info(int no){ return &sprite2_info[no]; };
@@ -522,7 +525,6 @@ private:
     void keyUpEvent( SDL_KeyboardEvent *event );
     bool keyPressEvent( SDL_KeyboardEvent *event );
     void timerEvent(bool init_flag);
-    bool convTouchKey(SDL_TouchFingerEvent &finger);
     void runEventLoop();
 
     // ----------------------------------------

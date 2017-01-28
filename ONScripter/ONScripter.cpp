@@ -37,29 +37,6 @@ extern "C" void waveCallback( int channel );
 #define DEFAULT_ENV_FONT "‚l‚r ƒSƒVƒbƒN"
 #define DEFAULT_AUTOMODE_TIME 1000
 
-void ONScripter::calcRenderRect()
-{
-    int vieww, viewh;
-    int renderw, renderh;
-    SDL_GetRendererOutputSize(renderer, &renderw, &renderh);
-    int swdh = screen_width * renderh;
-    int dwsh = renderw * screen_height;
-    if (swdh == dwsh) {
-        vieww = renderw;
-        viewh = renderh;
-    }
-    else if (swdh > dwsh) {
-        vieww = renderw;
-        viewh = (int)ceil(screen_height * ((float)renderw / screen_width));
-    }
-    else {
-        vieww = (int)ceil(screen_width * ((float)renderh / screen_height));
-        viewh = renderh;
-    }
-    screen_device_width = vieww;
-    screen_device_height = viewh;
-}
-
 void ONScripter::initSDL()
 {
     /* ---------------------------------------- */
@@ -107,9 +84,7 @@ void ONScripter::initSDL()
     screen_width  = PDA_WIDTH;
 #elif defined(PDA_AUTOSIZE)
     SDL_DisplayMode mode;
-    SDL_GetDisplayMode(0, 0, &mode);
-    if (SDL_GetDisplayMode(0, 0, &mode) != 0) {
-        fprintf(stderr, "No Video mode available.\n");
+    if (SDL_GetDisplayMode(0, 0, &mode) < 0) {
         exit(-1);
     }
     int width;
@@ -117,6 +92,8 @@ void ONScripter::initSDL()
         width = (mode.h*screen_width / screen_height) & (~0x01); // to be 2 bytes aligned
     else
         width = mode.w;
+    screen_ratio1 = width;
+    screen_ratio2 = script_h.screen_width;
     screen_width = width;
 #endif
 
@@ -201,6 +178,8 @@ void ONScripter::initSDL()
     
     wm_title_string = new char[ strlen(DEFAULT_WM_TITLE) + 1 ];
     memcpy( wm_title_string, DEFAULT_WM_TITLE, strlen(DEFAULT_WM_TITLE) + 1 );
+    wm_icon_string = new char[ strlen(DEFAULT_WM_ICON) + 1 ];
+    memcpy( wm_icon_string, DEFAULT_WM_TITLE, strlen(DEFAULT_WM_ICON) + 1 );
     SDL_SetWindowTitle(window, wm_title_string);
 }
 
@@ -709,20 +688,20 @@ void ONScripter::flushDirect( SDL_Rect &rect, int refresh_mode )
 }
 
 #if defined(USE_SMPEG) && defined(USE_SDL_RENDERER)
-void ONScripter::flushDirectYUV(SMPEG_Info *info)
-{
-    SDL_Rect dst_rect = {(device_width -screen_device_width )/2, 
-                         (device_height-screen_device_height)/2,
-                         screen_device_width, screen_device_height};
-    
-    Uint8 *pixel_buf = new Uint8[info->width*info->height + (info->width/2)*(info->height/2)*2];
-    
-    SDL_UpdateTexture(texture, &screen_rect, pixel_buf, info->width);
-    SDL_RenderCopy(renderer, texture, &screen_rect, &dst_rect);
-    SDL_RenderPresent(renderer);
-    
-    delete[] pixel_buf;
-}
+    void ONScripter::flushDirectYUV(SMPEG_Info *info)
+    {
+        SDL_Rect dst_rect = {(device_width -screen_device_width )/2,
+            (device_height-screen_device_height)/2,
+            screen_device_width, screen_device_height};
+        
+        Uint8 *pixel_buf = new Uint8[info->width*info->height + (info->width/2)*(info->height/2)*2];
+        
+        SDL_UpdateTexture(texture, &screen_rect, pixel_buf, info->width);
+        SDL_RenderCopy(renderer, texture, &screen_rect, &dst_rect);
+        SDL_RenderPresent(renderer);
+        
+        delete[] pixel_buf;
+    }
 #endif
 
 void ONScripter::mouseOverCheck( int x, int y )
@@ -841,19 +820,8 @@ void ONScripter::mouseOverCheck( int x, int y )
     current_over_button = button;
     shift_over_button = -1;
 }
-    
-void ONScripter::setFullScreen(bool fullscreen)
-{
-    if (fullscreen != fullscreen_mode) {
-        SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
-        SDL_GetWindowSize(window, &device_width, &device_height);
-        calcRenderRect();
-        flushDirect(screen_rect, refreshMode());
-        fullscreen_mode = fullscreen;
-    }
-}
 
-void ONScripter::executeLabel()
+int ONScripter::executeLabel()
 {
   executeLabelTop:    
 
@@ -905,6 +873,7 @@ void ONScripter::executeLabel()
     
     fprintf( stderr, " ***** End *****\n");
     endCommand();
+    return 0;
 }
 
 void ONScripter::runScript()

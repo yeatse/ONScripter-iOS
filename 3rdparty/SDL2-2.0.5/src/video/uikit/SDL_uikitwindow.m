@@ -42,6 +42,34 @@
 
 #include <Foundation/Foundation.h>
 
+void SDL_SyncDisplayModeWithOrientation(UIInterfaceOrientation orientation)
+{
+    BOOL isLandscape = UIInterfaceOrientationIsLandscape(orientation);
+    SDL_VideoDevice *_this = SDL_GetVideoDevice();
+    
+    if (_this && _this->num_displays > 0) {
+        SDL_DisplayMode *desktopmode = &_this->displays[0].desktop_mode;
+        SDL_DisplayMode *currentmode = &_this->displays[0].current_mode;
+        
+        /* The desktop display mode should be kept in sync with the screen
+         * orientation so that updating a window's fullscreen state to
+         * SDL_WINDOW_FULLSCREEN_DESKTOP keeps the window dimensions in the
+         * correct orientation. */
+        if (isLandscape != (desktopmode->w > desktopmode->h)) {
+            int height = desktopmode->w;
+            desktopmode->w = desktopmode->h;
+            desktopmode->h = height;
+        }
+        
+        /* Same deal with the current mode + SDL_GetCurrentDisplayMode. */
+        if (isLandscape != (currentmode->w > currentmode->h)) {
+            int height = currentmode->w;
+            currentmode->w = currentmode->h;
+            currentmode->h = height;
+        }
+    }
+}
+
 @implementation SDL_WindowData
 
 @synthesize uiwindow;

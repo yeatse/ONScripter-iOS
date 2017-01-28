@@ -1581,13 +1581,41 @@ int ONScripter::monocroCommand()
 
 int ONScripter::menu_windowCommand()
 {
-    setFullScreen(false);
+#ifndef IOS
+    if ( fullscreen_mode ){
+#if !defined(PSP)
+        if ( !SDL_WM_ToggleFullScreen( screen_surface ) ){
+            screen_surface = SDL_SetVideoMode( screen_device_width, screen_device_height, screen_bpp, DEFAULT_VIDEO_SURFACE_FLAG );
+#ifdef ANDROID
+            SDL_SetSurfaceBlendMode(screen_surface, SDL_BLENDMODE_NONE);
+#endif            
+            flushDirect( screen_rect, refreshMode() );
+        }
+#endif
+        fullscreen_mode = false;
+    }
+#endif // IOS
+    
     return RET_CONTINUE;
 }
 
 int ONScripter::menu_fullCommand()
 {
-    setFullScreen(true);
+#ifndef IOS
+    if ( !fullscreen_mode ){
+#if !defined(PSP)
+        if ( !SDL_WM_ToggleFullScreen( screen_surface ) ){
+            screen_surface = SDL_SetVideoMode( screen_device_width, screen_device_height, screen_bpp, DEFAULT_VIDEO_SURFACE_FLAG|SDL_FULLSCREEN );
+#ifdef ANDROID
+            SDL_SetSurfaceBlendMode(screen_surface, SDL_BLENDMODE_NONE);
+#endif            
+            flushDirect( screen_rect, refreshMode() );
+        }
+#endif
+        fullscreen_mode = true;
+    }
+#endif // IOS
+
     return RET_CONTINUE;
 }
 
@@ -3309,9 +3337,11 @@ int ONScripter::captionCommand()
 #endif
     
     setStr( &wm_title_string, buf2 );
+    setStr( &wm_icon_string,  buf2 );
     delete[] buf2;
     
     SDL_SetWindowTitle(window, wm_title_string);
+
     return RET_CONTINUE;
 }
 

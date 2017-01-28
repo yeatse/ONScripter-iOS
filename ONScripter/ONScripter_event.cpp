@@ -520,47 +520,47 @@ bool ONScripter::mousePressEvent( SDL_MouseButtonEvent *event )
 bool ONScripter::mouseWheelEvent(SDL_MouseWheelEvent *event)
 {
     if (variable_edit_mode) return false;
-
+    
     if (automode_flag) {
         automode_flag = false;
         return false;
     }
-
+    
     current_button_state.x = event->x * screen_width / screen_device_width;
     current_button_state.y = event->y * screen_height / screen_device_height;
     current_button_state.down_flag = false;
     skip_mode &= ~SKIP_NORMAL;
-
+    
     if (event->y > 0 &&
         (bexec_flag ||
-        (event_mode & WAIT_TEXT_MODE) ||
-        (usewheel_flag && event_mode & WAIT_BUTTON_MODE) ||
-        system_menu_mode == SYSTEM_LOOKBACK)) {
-        current_button_state.button = -2;
-        sprintf(current_button_state.str, "WHEELUP");
-        if (event_mode & WAIT_TEXT_MODE) system_menu_mode = SYSTEM_LOOKBACK;
-    } else if (event->y < 0 &&
-        (bexec_flag ||
-        (enable_wheeldown_advance_flag && event_mode & WAIT_TEXT_MODE) ||
-        (usewheel_flag && event_mode & WAIT_BUTTON_MODE) ||
-        system_menu_mode == SYSTEM_LOOKBACK)) {
-        if (event_mode & WAIT_TEXT_MODE)
-            current_button_state.button = 0;
-        else
-            current_button_state.button = -3;
-        sprintf(current_button_state.str, "WHEELDOWN");
-    }
-    else return false;
-
+         (event_mode & WAIT_TEXT_MODE) ||
+         (usewheel_flag && event_mode & WAIT_BUTTON_MODE) ||
+         system_menu_mode == SYSTEM_LOOKBACK)) {
+            current_button_state.button = -2;
+            sprintf(current_button_state.str, "WHEELUP");
+            if (event_mode & WAIT_TEXT_MODE) system_menu_mode = SYSTEM_LOOKBACK;
+        } else if (event->y < 0 &&
+                   (bexec_flag ||
+                    (enable_wheeldown_advance_flag && event_mode & WAIT_TEXT_MODE) ||
+                    (usewheel_flag && event_mode & WAIT_BUTTON_MODE) ||
+                    system_menu_mode == SYSTEM_LOOKBACK)) {
+                       if (event_mode & WAIT_TEXT_MODE)
+                           current_button_state.button = 0;
+                       else
+                           current_button_state.button = -3;
+                       sprintf(current_button_state.str, "WHEELDOWN");
+                   }
+        else return false;
+    
     if (event_mode & (WAIT_INPUT_MODE | WAIT_BUTTON_MODE)) {
         if (!(event_mode & (WAIT_TEXT_MODE)))
             skip_mode |= SKIP_TO_EOL;
         playClickVoice();
         stopAnimation(clickstr_state);
-
+        
         return true;
     }
-
+    
     return false;
 }
 
@@ -750,7 +750,7 @@ bool ONScripter::keyDownEvent( SDL_KeyboardEvent *event )
     else if (event->keysym.sym == SDLK_LEFT){
         current_button_state.event_type = SDL_MOUSEBUTTONDOWN;
         current_button_state.event_button = SDL_MOUSEWHEEL;
-        current_button_state.y = -1;
+        current_button_state.y = 1;
     }
     else if (event->keysym.sym == SDLK_RIGHT){
         current_button_state.event_type = SDL_MOUSEBUTTONDOWN;
@@ -1152,24 +1152,25 @@ void ONScripter::timerEvent(bool init_flag)
     }
 }
 
-SDL_MouseWheelEvent transTouchKey(SDL_TouchFingerEvent &finger) {
-    static struct FingerPoint {
-        float x, y;
-    } finger_start;
+SDL_MouseWheelEvent ConvertTouchToMouseWheel(const SDL_TouchFingerEvent &finger)
+{
+    static struct { float x, y; } fingerStart = { 0 };
+    static Sint32 oldKey = 0;
     
-    static Sint32 old_key = 0;
-    SDL_MouseWheelEvent mw;
+    SDL_MouseWheelEvent mw = { 0 };
     if (finger.type == SDL_FINGERDOWN) {
-        finger_start.x = finger.x;
-        finger_start.y = finger.y;
+        fingerStart.x = finger.x;
+        fingerStart.y = finger.y;
     } else if (finger.type == SDL_FINGERMOTION) {
-        float dtfinger = finger.y - finger_start.y;
         Sint32 key = 0;
-        if (dtfinger > 0.5) key = -1;
-        else if (dtfinger < -0.5) key = 1;
-        if (old_key != key) {
+        if (finger.y - fingerStart.y > 0.5) {
+            key = -1;
+        } else if (finger.y - fingerStart.y < -0.5) {
+            key = 1;
+        }
+        if (oldKey != key) {
             mw.y = key;
-            old_key = key;
+            oldKey = key;
             return mw;
         }
     }
@@ -1177,23 +1178,16 @@ SDL_MouseWheelEvent transTouchKey(SDL_TouchFingerEvent &finger) {
     return mw;
 }
 
-bool ONScripter::convTouchKey(SDL_TouchFingerEvent &finger)
-{
-    SDL_MouseWheelEvent mw = transTouchKey(finger);
-    if (mw.y != 0) return mouseWheelEvent(&mw);
-    return false;
-}
-
 void ONScripter::runEventLoop()
 {
     SDL_Event event, tmp_event;
-
+    
     while ( SDL_WaitEvent(&event) ) {
 #if defined(USE_SMPEG)
         // required to repeat the movie
         if (layer_smpeg_sample)
             SMPEG_status(layer_smpeg_sample);
-#endif    
+#endif
         bool ret = false;
         // ignore continous SDL_MOUSEMOTION
         while (event.type == SDL_MOUSEMOTION){
@@ -1208,14 +1202,20 @@ void ONScripter::runEventLoop()
 #endif
             event = tmp_event;
         }
-
+        
         switch (event.type) {
 #if defined(IOS)  || defined(ANDROID)
             case SDL_FINGERMOTION:
             {
-                if (!btndown_flag && convTouchKey(event.tfinger)) return;
-                tmp_event.motion.x = device_width * event.tfinger.x - (device_width - screen_device_width) / 2;
-                tmp_event.motion.y = device_height * event.tfinger.y - (device_height - screen_device_height) / 2;
+                if (!btndown_flag) {
+                    SDL_MouseWheelEvent mw = ConvertTouchToMouseWheel(event.tfinger);
+                    if (mw.y != 0) {
+                        mouseWheelEvent(&mw);
+                        return;
+                    }
+                }
+                tmp_event.motion.x = device_width *event.tfinger.x - (device_width -screen_device_width)/2;
+                tmp_event.motion.y = device_height*event.tfinger.y - (device_height-screen_device_height)/2;
                 if (mouseMoveEvent( &tmp_event.motion )) return;
                 if (btndown_flag){
                     event.button.type = SDL_MOUSEBUTTONDOWN;
@@ -1231,192 +1231,196 @@ void ONScripter::runEventLoop()
                 break;
             case SDL_FINGERDOWN:
             {
-                convTouchKey(event.tfinger);
-                tmp_event.motion.x = device_width * event.tfinger.x - (device_width - screen_device_width) / 2;
-                tmp_event.motion.y = device_height * event.tfinger.y - (device_height - screen_device_height) / 2;
+                SDL_MouseWheelEvent mw = ConvertTouchToMouseWheel(event.tfinger);
+                if (mw.y != 0) mouseWheelEvent(&mw);
+                tmp_event.motion.x = device_width *event.tfinger.x - (device_width -screen_device_width)/2;
+                tmp_event.motion.y = device_height*event.tfinger.y - (device_height-screen_device_height)/2;
                 if (mouseMoveEvent( &tmp_event.motion )) return;
+            }
                 if ( btndown_flag ){
                     tmp_event.button.type = SDL_MOUSEBUTTONDOWN;
                     tmp_event.button.button = SDL_BUTTON_LEFT;
                     if (SDL_GetNumTouchFingers(event.tfinger.touchId) >= 2)
                         tmp_event.button.button = SDL_BUTTON_RIGHT;
-                    tmp_event.button.x = device_width * event.tfinger.x - (device_width - screen_device_width) / 2;
-                    tmp_event.button.y = device_height * event.tfinger.y - (device_height - screen_device_height) / 2;
+                    tmp_event.button.x = device_width *event.tfinger.x - (device_width -screen_device_width)/2;
+                    tmp_event.button.y = device_height*event.tfinger.y - (device_height-screen_device_height)/2;
                     ret = mousePressEvent( &tmp_event.button );
                 }
-                {
-                    num_fingers = SDL_GetNumTouchFingers(event.tfinger.touchId);
-                    if (num_fingers >= 3){
-                        tmp_event.key.keysym.sym = SDLK_LCTRL;
-                        ret |= keyDownEvent( &tmp_event.key );
-                    }
+            {
+                num_fingers = SDL_GetNumTouchFingers(event.tfinger.touchId);
+                if (num_fingers >= 3){
+                    tmp_event.key.keysym.sym = SDLK_LCTRL;
+                    ret |= keyDownEvent( &tmp_event.key );
                 }
-                if (ret) return;
             }
+                if (ret) return;
                 break;
             case SDL_FINGERUP:
-            {
                 if (num_fingers == 0) break;
-                {
-                    tmp_event.button.type = SDL_MOUSEBUTTONUP;
-                    tmp_event.button.button = SDL_BUTTON_LEFT;
-                    if (num_fingers == 2)
-                        tmp_event.button.button = SDL_BUTTON_RIGHT;
-                    tmp_event.button.x = device_width * event.tfinger.x - (device_width - screen_device_width) / 2;
-                    tmp_event.button.y = device_height * event.tfinger.y - (device_height - screen_device_height) / 2;
-                    ret = mousePressEvent( &tmp_event.button );
-                }
+            {
+                tmp_event.button.type = SDL_MOUSEBUTTONUP;
+                tmp_event.button.button = SDL_BUTTON_LEFT;
+                if (num_fingers == 2)
+                    tmp_event.button.button = SDL_BUTTON_RIGHT;
+                tmp_event.button.x = device_width *event.tfinger.x - (device_width -screen_device_width)/2;
+                tmp_event.button.y = device_height*event.tfinger.y - (device_height-screen_device_height)/2;
+                ret = mousePressEvent( &tmp_event.button );
+            }
                 tmp_event.key.keysym.sym = SDLK_LCTRL;
                 keyUpEvent( &tmp_event.key );
                 num_fingers = 0;
                 if (ret) return;
-            }
                 break;
 #else
-          case SDL_MOUSEMOTION:
-            if (mouseMoveEvent( &event.motion )) return;
-            if (btndown_flag){
-                if (event.motion.state & SDL_BUTTON(SDL_BUTTON_LEFT))
-                    tmp_event.button.button = SDL_BUTTON_LEFT;
-                else if (event.motion.state & SDL_BUTTON(SDL_BUTTON_RIGHT))
-                    tmp_event.button.button = SDL_BUTTON_RIGHT;
-                else
-                    break;
-
-                tmp_event.button.type = SDL_MOUSEBUTTONDOWN;
-                tmp_event.button.x = event.motion.x;
-                tmp_event.button.y = event.motion.y;
-                ret = mousePressEvent( &tmp_event.button );
+            case SDL_MOUSEMOTION:
+                if (mouseMoveEvent( &event.motion )) return;
+                if (btndown_flag){
+                    if (event.motion.state & SDL_BUTTON(SDL_BUTTON_LEFT))
+                        tmp_event.button.button = SDL_BUTTON_LEFT;
+                    else if (event.motion.state & SDL_BUTTON(SDL_BUTTON_RIGHT))
+                        tmp_event.button.button = SDL_BUTTON_RIGHT;
+                    else
+                        break;
+                    
+                    tmp_event.button.type = SDL_MOUSEBUTTONDOWN;
+                    tmp_event.button.x = event.motion.x;
+                    tmp_event.button.y = event.motion.y;
+                    ret = mousePressEvent( &tmp_event.button );
+                    if (ret) return;
+                }
+                break;
+                
+            case SDL_MOUSEBUTTONDOWN:
+                current_button_state.event_type = event.type;
+                current_button_state.event_button = event.button.button;
+                if ( !btndown_flag ) break;
+            case SDL_MOUSEBUTTONUP:
+                current_button_state.event_type = event.type;
+                current_button_state.event_button = event.button.button;
+                ret = mousePressEvent( &event.button );
                 if (ret) return;
-            }
-            break;
-            
-          case SDL_MOUSEBUTTONDOWN:
-            current_button_state.event_type = event.type;
-            current_button_state.event_button = event.button.button;
-            if ( !btndown_flag ) break;
-          case SDL_MOUSEBUTTONUP:
-            current_button_state.event_type = event.type;
-            current_button_state.event_button = event.button.button;
-            ret = mousePressEvent( &event.button );
-            if (ret) return;
-            break;
+                break;
 #endif
-          case SDL_JOYBUTTONDOWN:
-            event.key.type = SDL_KEYDOWN;
-            event.key.keysym.sym = transJoystickButton(event.jbutton.button);
-            if(event.key.keysym.sym == SDLK_UNKNOWN)
+            case SDL_JOYBUTTONDOWN:
+                event.key.type = SDL_KEYDOWN;
+                event.key.keysym.sym = transJoystickButton(event.jbutton.button);
+                if(event.key.keysym.sym == SDLK_UNKNOWN)
+                    break;
+                
+            case SDL_KEYDOWN:
+                event.key.keysym.sym = transKey(event.key.keysym.sym);
+                ret = keyDownEvent( &event.key );
+                if ( btndown_flag )
+                    ret |= keyPressEvent( &event.key );
+                if (ret) return;
                 break;
-            
-          case SDL_KEYDOWN:
-            event.key.keysym.sym = transKey(event.key.keysym.sym);
-            ret = keyDownEvent( &event.key );
-            if ( btndown_flag )
-                ret |= keyPressEvent( &event.key );
-            if (ret) return;
-            break;
-
-          case SDL_JOYBUTTONUP:
-            event.key.type = SDL_KEYUP;
-            event.key.keysym.sym = transJoystickButton(event.jbutton.button);
-            if(event.key.keysym.sym == SDLK_UNKNOWN)
+                
+            case SDL_JOYBUTTONUP:
+                event.key.type = SDL_KEYUP;
+                event.key.keysym.sym = transJoystickButton(event.jbutton.button);
+                if(event.key.keysym.sym == SDLK_UNKNOWN)
+                    break;
+                
+            case SDL_KEYUP:
+                event.key.keysym.sym = transKey(event.key.keysym.sym);
+                keyUpEvent( &event.key );
+                ret = keyPressEvent( &event.key );
+                if (ret) return;
                 break;
-            
-          case SDL_KEYUP:
-            event.key.keysym.sym = transKey(event.key.keysym.sym);
-            keyUpEvent( &event.key );
-            ret = keyPressEvent( &event.key );
-            if (ret) return;
-            break;
-
-          case SDL_JOYAXISMOTION:
-          {
-              SDL_KeyboardEvent ke = transJoystickAxis(event.jaxis);
-              if (ke.keysym.sym != SDLK_UNKNOWN){
-                  if (ke.type == SDL_KEYDOWN){
-                      keyDownEvent( &ke );
-                      if (btndown_flag)
-                          keyPressEvent( &ke );
-                  }
-                  else if (ke.type == SDL_KEYUP){
-                      keyUpEvent( &ke );
-                      keyPressEvent( &ke );
-                  }
-              }
-              break;
-          }
-
-          case ONS_TIMER_EVENT:
-            timerEvent(false);
-            break;
-
-          case ONS_MUSIC_EVENT:
-          case ONS_BGMFADE_EVENT:
-          case ONS_CDAUDIO_EVENT:
-          case ONS_MIDI_EVENT:
-            flushEventSub( event );
-            break;
-
-          case ONS_CHUNK_EVENT:
-            flushEventSub( event );
-            //printf("ONS_CHUNK_EVENT %d: %x %d %x\n", event.user.code, wave_sample[0], automode_flag, event_mode);
-            if ( event.user.code != 0 ||
-                 !(event_mode & WAIT_VOICE_MODE) ) break;
-
-            event_mode &= ~WAIT_VOICE_MODE;
-
-          case ONS_BREAK_EVENT:
-            if (event_mode & WAIT_VOICE_MODE && wave_sample[0]){
-                next_time = -1;
+                
+            case SDL_JOYAXISMOTION:
+            {
+                SDL_KeyboardEvent ke = transJoystickAxis(event.jaxis);
+                if (ke.keysym.sym != SDLK_UNKNOWN){
+                    if (ke.type == SDL_KEYDOWN){
+                        keyDownEvent( &ke );
+                        if (btndown_flag)
+                            keyPressEvent( &ke );
+                    }
+                    else if (ke.type == SDL_KEYUP){
+                        keyUpEvent( &ke );
+                        keyPressEvent( &ke );
+                    }
+                }
+                break;
+            }
+                
+            case ONS_TIMER_EVENT:
                 timerEvent(false);
                 break;
-            }
-
-            if (automode_flag || autoclick_time > 0)
-                current_button_state.button = 0;
-            else if ( usewheel_flag ){
-                current_button_state.button = -5;
-                sprintf(current_button_state.str, "TIMEOUT");
-            }
-            else{
-                current_button_state.button = -2;
-                sprintf(current_button_state.str, "TIMEOUT");
-            }
-
-            if (event_mode & (WAIT_INPUT_MODE | WAIT_BUTTON_MODE) && 
-                ( clickstr_state == CLICK_WAIT || 
-                  clickstr_state == CLICK_NEWPAGE ) ){
-                playClickVoice(); 
-                stopAnimation( clickstr_state ); 
-            }
-
-            return;
                 
-          case SDL_WINDOWEVENT:
-                switch (event.window.event) {
-                    case SDL_WINDOWEVENT_EXPOSED:
-                        SDL_RenderPresent(renderer);
-                        break;
-                    case SDL_WINDOWEVENT_FOCUS_LOST:
-                        Mix_Pause(-1);
-                        Mix_PauseMusic();
-                        SDL_MouseMotionEvent mevent;
-                        mevent.x = screen_device_width;
-                        mevent.y = screen_device_height;
-                        mouseMoveEvent(&mevent);
-                        break;
-                    case SDL_WINDOWEVENT_FOCUS_GAINED:
-                        Mix_ResumeMusic();
-                        Mix_Resume(-1);
-                    default:
-                        break;
+            case ONS_MUSIC_EVENT:
+            case ONS_BGMFADE_EVENT:
+            case ONS_CDAUDIO_EVENT:
+            case ONS_MIDI_EVENT:
+                flushEventSub( event );
+                break;
+                
+            case ONS_CHUNK_EVENT:
+                flushEventSub( event );
+                //printf("ONS_CHUNK_EVENT %d: %x %d %x\n", event.user.code, wave_sample[0], automode_flag, event_mode);
+                if ( event.user.code != 0 ||
+                    !(event_mode & WAIT_VOICE_MODE) ) break;
+                
+                event_mode &= ~WAIT_VOICE_MODE;
+                
+            case ONS_BREAK_EVENT:
+                if (event_mode & WAIT_VOICE_MODE && wave_sample[0]){
+                    next_time = -1;
+                    timerEvent(false);
+                    break;
                 }
-          case SDL_QUIT:
-            endCommand();
-            break;
-            
-          default:
-            break;
+                
+                if (automode_flag || autoclick_time > 0)
+                    current_button_state.button = 0;
+                else if ( usewheel_flag ){
+                    current_button_state.button = -5;
+                    sprintf(current_button_state.str, "TIMEOUT");
+                }
+                else{
+                    current_button_state.button = -2;
+                    sprintf(current_button_state.str, "TIMEOUT");
+                }
+                
+                if (event_mode & (WAIT_INPUT_MODE | WAIT_BUTTON_MODE) &&
+                    ( clickstr_state == CLICK_WAIT ||
+                     clickstr_state == CLICK_NEWPAGE ) ){
+                        playClickVoice();
+                        stopAnimation( clickstr_state );
+                    }
+                
+                return;
+            case SDL_WINDOWEVENT:
+                if (event.window.event == SDL_WINDOWEVENT_EXPOSED) {
+#ifdef USE_SDL_RENDERER
+                    SDL_RenderPresent(renderer);
+#else
+                    SDL_UpdateRect( screen_surface, 0, 0, screen_width, screen_height );
+#endif
+                } else if (event.window.event == SDL_WINDOWEVENT_FOCUS_LOST) {
+                    Mix_Pause(-1);
+                    Mix_PauseMusic();
+                    // the mouse cursor leaves the window
+                    SDL_MouseMotionEvent mevent;
+                    mevent.x = screen_device_width;
+                    mevent.y = screen_device_height;
+                    mouseMoveEvent( &mevent );
+                } else if (event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
+                    Mix_Pause(-1);
+                    Mix_PauseMusic();
+#ifdef ANDROID
+                    screen_surface = SDL_SetVideoMode( screen_width, screen_height, screen_bpp, DEFAULT_VIDEO_SURFACE_FLAG );
+                    SDL_SetSurfaceBlendMode(screen_surface, SDL_BLENDMODE_NONE);
+                    repaintCommand();
+#endif
+                }
+                break;
+            case SDL_QUIT:
+                endCommand();
+                break;
+                
+            default:
+                break;
         }
     }
 }

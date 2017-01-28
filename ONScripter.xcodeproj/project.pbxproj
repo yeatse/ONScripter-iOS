@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		380C1F591E33901B00CA2A87 /* ONScripterIOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1F571E33901B00CA2A87 /* ONScripterIOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		380C1FCD1E33CC7F00CA2A87 /* AnimationInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1F9C1E33CC7F00CA2A87 /* AnimationInfo.cpp */; };
 		380C1FCE1E33CC7F00CA2A87 /* AnimationInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1F9D1E33CC7F00CA2A87 /* AnimationInfo.h */; };
 		380C1FD11E33CC7F00CA2A87 /* BaseReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 380C1FA01E33CC7F00CA2A87 /* BaseReader.h */; };
@@ -31,7 +30,6 @@
 		380C1FE71E33CC7F00CA2A87 /* ONScripter_file2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FB61E33CC7F00CA2A87 /* ONScripter_file2.cpp */; };
 		380C1FE81E33CC7F00CA2A87 /* ONScripter_image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FB71E33CC7F00CA2A87 /* ONScripter_image.cpp */; };
 		380C1FE91E33CC7F00CA2A87 /* ONScripter_lut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FB81E33CC7F00CA2A87 /* ONScripter_lut.cpp */; };
-		380C1FEA1E33CC7F00CA2A87 /* onscripter_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FB91E33CC7F00CA2A87 /* onscripter_main.cpp */; };
 		380C1FEB1E33CC7F00CA2A87 /* ONScripter_rmenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FBA1E33CC7F00CA2A87 /* ONScripter_rmenu.cpp */; };
 		380C1FEC1E33CC7F00CA2A87 /* ONScripter_sound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FBB1E33CC7F00CA2A87 /* ONScripter_sound.cpp */; };
 		380C1FED1E33CC7F00CA2A87 /* ONScripter_text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 380C1FBC1E33CC7F00CA2A87 /* ONScripter_text.cpp */; };
@@ -57,14 +55,16 @@
 		3862D2701E351EFF00B65552 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3862D2621E351E2C00B65552 /* CoreMotion.framework */; };
 		3862D2721E351F7400B65552 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3862D2711E351F7400B65552 /* GameController.framework */; };
 		3862D2771E35200300B65552 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3862D2751E35200300B65552 /* liblua.a */; };
-		3862D27B1E35209C00B65552 /* SDLViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3862D2791E35209C00B65552 /* SDLViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3862D27C1E35209C00B65552 /* SDLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3862D27A1E35209C00B65552 /* SDLViewController.m */; };
 		3862D27E1E3523D200B65552 /* libsmpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3862D27D1E3523D200B65552 /* libsmpeg.a */; };
 		3862D27F1E35243400B65552 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3862D2661E351E7D00B65552 /* AudioToolbox.framework */; };
 		3862D2801E35244D00B65552 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3862D2681E351E8F00B65552 /* ImageIO.framework */; };
 		3862D2811E35246600B65552 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3862D26E1E351EE700B65552 /* AVFoundation.framework */; };
 		3878FBA21E352C2700555FB7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3878FBA11E352C2700555FB7 /* UIKit.framework */; };
 		3878FBA41E352C8900555FB7 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 3878FBA31E352C8900555FB7 /* libbz2.tbd */; };
+		389ED5F81E3C940900203989 /* ONScripterExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 389ED5F61E3C940900203989 /* ONScripterExecutor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		389ED5F91E3C940A00203989 /* ONScripterExecutor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 389ED5F71E3C940900203989 /* ONScripterExecutor.mm */; };
+		389ED5FB1E3CC4AA00203989 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 389ED5FA1E3CC4AA00203989 /* CoreGraphics.framework */; };
+		389ED5FD1E3CC4B400203989 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 389ED5FC1E3CC4B400203989 /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,7 +107,6 @@
 
 /* Begin PBXFileReference section */
 		380C1F541E33901B00CA2A87 /* ONScripter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ONScripter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		380C1F571E33901B00CA2A87 /* ONScripterIOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ONScripterIOS.h; sourceTree = "<group>"; };
 		380C1F581E33901B00CA2A87 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		380C1F671E339C2600CA2A87 /* SDL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL.xcodeproj; path = "SDL/Xcode-iOS/SDL/SDL.xcodeproj"; sourceTree = "<group>"; };
 		380C1F721E339CA500CA2A87 /* SDL_image.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL_image.xcodeproj; path = "SDL_image/Xcode-iOS/SDL_image.xcodeproj"; sourceTree = SOURCE_ROOT; };
@@ -136,7 +135,6 @@
 		380C1FB61E33CC7F00CA2A87 /* ONScripter_file2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter_file2.cpp; sourceTree = "<group>"; };
 		380C1FB71E33CC7F00CA2A87 /* ONScripter_image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter_image.cpp; sourceTree = "<group>"; };
 		380C1FB81E33CC7F00CA2A87 /* ONScripter_lut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter_lut.cpp; sourceTree = "<group>"; };
-		380C1FB91E33CC7F00CA2A87 /* onscripter_main.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = onscripter_main.cpp; sourceTree = "<group>"; };
 		380C1FBA1E33CC7F00CA2A87 /* ONScripter_rmenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter_rmenu.cpp; sourceTree = "<group>"; };
 		380C1FBB1E33CC7F00CA2A87 /* ONScripter_sound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter_sound.cpp; sourceTree = "<group>"; };
 		380C1FBC1E33CC7F00CA2A87 /* ONScripter_text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ONScripter_text.cpp; sourceTree = "<group>"; };
@@ -161,11 +159,13 @@
 		3862D26E1E351EE700B65552 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		3862D2711E351F7400B65552 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		3862D2751E35200300B65552 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblua.a; sourceTree = "<group>"; };
-		3862D2791E35209C00B65552 /* SDLViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLViewController.h; sourceTree = "<group>"; };
-		3862D27A1E35209C00B65552 /* SDLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLViewController.m; sourceTree = "<group>"; };
 		3862D27D1E3523D200B65552 /* libsmpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsmpeg.a; sourceTree = "<group>"; };
 		3878FBA11E352C2700555FB7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		3878FBA31E352C8900555FB7 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
+		389ED5F61E3C940900203989 /* ONScripterExecutor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ONScripterExecutor.h; sourceTree = "<group>"; };
+		389ED5F71E3C940900203989 /* ONScripterExecutor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ONScripterExecutor.mm; sourceTree = "<group>"; };
+		389ED5FA1E3CC4AA00203989 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		389ED5FC1E3CC4B400203989 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +174,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3878FBA21E352C2700555FB7 /* UIKit.framework in Frameworks */,
+				389ED5FD1E3CC4B400203989 /* QuartzCore.framework in Frameworks */,
+				389ED5FB1E3CC4AA00203989 /* CoreGraphics.framework in Frameworks */,
 				3862D25D1E351DF200B65552 /* OpenGLES.framework in Frameworks */,
 				3862D2801E35244D00B65552 /* ImageIO.framework in Frameworks */,
 				3862D27F1E35243400B65552 /* AudioToolbox.framework in Frameworks */,
@@ -218,9 +220,8 @@
 		380C1F561E33901B00CA2A87 /* ONScripter */ = {
 			isa = PBXGroup;
 			children = (
-				380C1F571E33901B00CA2A87 /* ONScripterIOS.h */,
-				3862D2791E35209C00B65552 /* SDLViewController.h */,
-				3862D27A1E35209C00B65552 /* SDLViewController.m */,
+				389ED5F61E3C940900203989 /* ONScripterExecutor.h */,
+				389ED5F71E3C940900203989 /* ONScripterExecutor.mm */,
 				380C1F9C1E33CC7F00CA2A87 /* AnimationInfo.cpp */,
 				380C1F9D1E33CC7F00CA2A87 /* AnimationInfo.h */,
 				380C1FA01E33CC7F00CA2A87 /* BaseReader.h */,
@@ -244,7 +245,6 @@
 				380C1FB61E33CC7F00CA2A87 /* ONScripter_file2.cpp */,
 				380C1FB71E33CC7F00CA2A87 /* ONScripter_image.cpp */,
 				380C1FB81E33CC7F00CA2A87 /* ONScripter_lut.cpp */,
-				380C1FB91E33CC7F00CA2A87 /* onscripter_main.cpp */,
 				380C1FBA1E33CC7F00CA2A87 /* ONScripter_rmenu.cpp */,
 				380C1FBB1E33CC7F00CA2A87 /* ONScripter_sound.cpp */,
 				380C1FBC1E33CC7F00CA2A87 /* ONScripter_text.cpp */,
@@ -302,6 +302,8 @@
 		380C1F931E33C8AB00CA2A87 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				389ED5FC1E3CC4B400203989 /* QuartzCore.framework */,
+				389ED5FA1E3CC4AA00203989 /* CoreGraphics.framework */,
 				3878FBA11E352C2700555FB7 /* UIKit.framework */,
 				3862D25C1E351DF200B65552 /* OpenGLES.framework */,
 				3862D2681E351E8F00B65552 /* ImageIO.framework */,
@@ -327,15 +329,14 @@
 				380C1FF11E33CC7F00CA2A87 /* resize_image.h in Headers */,
 				380C1FD11E33CC7F00CA2A87 /* BaseReader.h in Headers */,
 				380C1FF71E33CC7F00CA2A87 /* ScriptHandler.h in Headers */,
-				380C1F591E33901B00CA2A87 /* ONScripterIOS.h in Headers */,
 				380C1FFD1E33CC7F00CA2A87 /* version.h in Headers */,
 				380C1FD91E33CC7F00CA2A87 /* FontInfo.h in Headers */,
 				380C1FDB1E33CC7F00CA2A87 /* LUAHandler.h in Headers */,
+				389ED5F81E3C940900203989 /* ONScripterExecutor.h in Headers */,
 				380C1FD71E33CC7F00CA2A87 /* DirtyRect.h in Headers */,
 				380C1FDF1E33CC7F00CA2A87 /* NsaReader.h in Headers */,
 				380C1FCE1E33CC7F00CA2A87 /* AnimationInfo.h in Headers */,
 				380C1FD51E33CC7F00CA2A87 /* DirectReader.h in Headers */,
-				3862D27B1E35209C00B65552 /* SDLViewController.h in Headers */,
 				380C1FF51E33CC7F00CA2A87 /* SarReader.h in Headers */,
 				380C1FEF1E33CC7F00CA2A87 /* ONScripter.h in Headers */,
 				380C1FD21E33CC7F00CA2A87 /* ButtonLink.h in Headers */,
@@ -478,11 +479,11 @@
 				380C1FD81E33CC7F00CA2A87 /* FontInfo.cpp in Sources */,
 				380C1FDA1E33CC7F00CA2A87 /* LUAHandler.cpp in Sources */,
 				380C1FE21E33CC7F00CA2A87 /* ONScripter_command.cpp in Sources */,
+				389ED5F91E3C940A00203989 /* ONScripterExecutor.mm in Sources */,
 				380C1FE31E33CC7F00CA2A87 /* ONScripter_effect_breakup.cpp in Sources */,
 				380C1FF01E33CC7F00CA2A87 /* resize_image.cpp in Sources */,
 				380C1FCD1E33CC7F00CA2A87 /* AnimationInfo.cpp in Sources */,
 				380C1FE91E33CC7F00CA2A87 /* ONScripter_lut.cpp in Sources */,
-				380C1FEA1E33CC7F00CA2A87 /* onscripter_main.cpp in Sources */,
 				380C1FEB1E33CC7F00CA2A87 /* ONScripter_rmenu.cpp in Sources */,
 				380C1FED1E33CC7F00CA2A87 /* ONScripter_text.cpp in Sources */,
 				380C1FF61E33CC7F00CA2A87 /* ScriptHandler.cpp in Sources */,
@@ -493,7 +494,6 @@
 				380C1FE71E33CC7F00CA2A87 /* ONScripter_file2.cpp in Sources */,
 				380C1FDE1E33CC7F00CA2A87 /* NsaReader.cpp in Sources */,
 				380C1FE51E33CC7F00CA2A87 /* ONScripter_event.cpp in Sources */,
-				3862D27C1E35209C00B65552 /* SDLViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
