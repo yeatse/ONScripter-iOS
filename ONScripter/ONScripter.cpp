@@ -22,11 +22,12 @@
  */
 
 #include "ONScripter.h"
+#include "coding2utf16.h"
 #ifdef USE_FONTCONFIG
 #include <fontconfig/fontconfig.h>
 #endif
 
-extern void initSJIS2UTF16();
+extern Coding2UTF16 *coding2utf16;
 extern "C" void waveCallback( int channel );
 
 #define DEFAULT_AUDIOBUF  4096
@@ -34,7 +35,7 @@ extern "C" void waveCallback( int channel );
 #define FONT_FILE "default.ttf"
 #define REGISTRY_FILE "registry.txt"
 #define DLL_FILE "dll.txt"
-#define DEFAULT_ENV_FONT "‚l‚r ƒSƒVƒbƒN"
+#define DEFAULT_ENV_FONT "å®‹ä½“"
 #define DEFAULT_AUTOMODE_TIME 1000
 
 void ONScripter::initSDL()
@@ -174,7 +175,7 @@ void ONScripter::initSDL()
     screen_rect.w = screen_width;
     screen_rect.h = screen_height;
 
-    initSJIS2UTF16();
+    coding2utf16->init();
     
     wm_title_string = new char[ strlen(DEFAULT_WM_TITLE) + 1 ];
     memcpy( wm_title_string, DEFAULT_WM_TITLE, strlen(DEFAULT_WM_TITLE) + 1 );

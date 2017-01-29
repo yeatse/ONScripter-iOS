@@ -11,10 +11,9 @@
 
 #import "ONScripter.h"
 #import <SDL.h>
-/*
 #import "gbk2utf16.h"
 #import "sjis2utf16.h"
-*/
+
 FOUNDATION_EXTERN int SDL_SendAppEvent(SDL_EventType eventType);
 FOUNDATION_EXTERN int SDL_SendWindowEvent(SDL_Window * window, Uint8 windowevent, int data1, int data2);
 FOUNDATION_EXTERN void SDL_SyncDisplayModeWithOrientation(UIInterfaceOrientation orientation);
@@ -23,7 +22,7 @@ FOUNDATION_EXTERN void playVideoIOS(const char *filename, bool click_flag, bool 
 {
     NSString *fileName = [NSString stringWithUTF8String:filename];
 }
-/*
+
 Coding2UTF16 *coding2utf16 = NULL;
 
 FOUNDATION_STATIC_INLINE Coding2UTF16 *CoderFromEncoding(ONScripterEncoding encoding)
@@ -51,7 +50,7 @@ FOUNDATION_STATIC_INLINE Coding2UTF16 *CoderFromEncoding(ONScripterEncoding enco
         }
     }
 }
-*/
+
 @implementation ONScripterConfiguration
 
 - (instancetype)initWithArchivePath:(NSString *)archivePath savePath:(NSString *)savePath encoding:(ONScripterEncoding)encoding {
@@ -100,7 +99,7 @@ FOUNDATION_STATIC_INLINE Coding2UTF16 *CoderFromEncoding(ONScripterEncoding enco
         return ONSExecuteStillRunning;
     }
     
-//    coding2utf16 = CoderFromEncoding(configuration.encoding);
+    coding2utf16 = CoderFromEncoding(configuration.encoding);
     
     _onscripter = new ONScripter();
     _onscripter->setArchivePath(configuration.archivePath.UTF8String);

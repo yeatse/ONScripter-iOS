@@ -1013,7 +1013,7 @@ static int nsutf_from_ansi(lua_State *state)
         conv_buf = new char[len];
         conv_buf_len = len;
     }
-    DirectReader::convertFromSJISToUTF8(conv_buf, str);
+    DirectReader::convertCodingToUTF8(conv_buf, str);
     lua_pushstring( state, conv_buf );
 
     return 1;
@@ -1031,7 +1031,7 @@ static int nsutf_to_ansi(lua_State *state)
         conv_buf = new char[len];
         conv_buf_len = len;
     }
-    DirectReader::convertFromUTF8ToSJIS(conv_buf, str);
+    DirectReader::convertFromUTF8ToCoding(conv_buf, str);
     lua_pushstring( state, conv_buf );
 
     return 1;

@@ -33,9 +33,9 @@ extern "C"
 #define VERSION_STR1 "ONScripter"
 #define VERSION_STR2 "Copyright (C) 2001-2016 Studio O.G.A. All Rights Reserved."
 
-#define DEFAULT_SAVE_MENU_NAME "＜セーブ＞"
-#define DEFAULT_LOAD_MENU_NAME "＜ロード＞"
-#define DEFAULT_SAVE_ITEM_NAME "しおり"
+#define DEFAULT_SAVE_MENU_NAME coding2utf16->DEFAULT_SAVE_MENU_NAME
+#define DEFAULT_LOAD_MENU_NAME coding2utf16->DEFAULT_LOAD_MENU_NAME
+#define DEFAULT_SAVE_ITEM_NAME coding2utf16->DEFAULT_SAVE_ITEM_NAME
 
 #define DEFAULT_TEXT_SPEED_LOW    40
 #define DEFAULT_TEXT_SPEED_MIDDLE 20

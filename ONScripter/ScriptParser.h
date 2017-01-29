@@ -38,6 +38,8 @@
 #ifdef USE_LUA
 #include "LUAHandler.h"
 #endif
+#include "coding2utf16.h"
+extern Coding2UTF16 *coding2utf16;
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -51,8 +53,8 @@
 #define DEFAULT_LOOKBACK_NAME2 "doncur.bmp"
 #define DEFAULT_LOOKBACK_NAME3 "doffcur.bmp"
 
-#define DEFAULT_START_KINSOKU "」』）］｝、。，．・？！ヽヾゝゞ々ー"
-#define DEFAULT_END_KINSOKU   "「『（［｛"
+#define DEFAULT_START_KINSOKU coding2utf16->DEFAULT_START_KINSOKU
+#define DEFAULT_END_KINSOKU   coding2utf16->DEFAULT_END_KINSOKU
 
 #define MAX_LAYER_NUM 32
 
