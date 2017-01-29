@@ -74,6 +74,9 @@ ScriptParser::ScriptParser()
     render_font_outline = false;
     page_list = NULL;
     last_error_str = NULL;
+    pretextgosub_label = NULL;
+    textgosub_label = NULL;
+    default_env_font = NULL;
 
     /* ---------------------------------------- */
     /* Sound related variables */
@@ -104,6 +107,11 @@ ScriptParser::~ScriptParser()
 
     if (save_dir_envdata) delete[] save_dir_envdata;
     if (last_error_str) delete[] last_error_str;
+    if (archive_path) delete[] archive_path;
+    if (save_dir) delete[] save_dir;
+    if (default_env_font) delete[] default_env_font;
+    if (num_start_kinsoku) delete[] start_kinsoku;
+    if (num_end_kinsoku) delete[] end_kinsoku;
 }
 
 void ScriptParser::reset()
@@ -158,8 +166,14 @@ void ScriptParser::reset()
     sprintf( version_str, "%s\n%s\n", VERSION_STR1, VERSION_STR2 );
     z_order = 499;
 
-    textgosub_label = NULL;
-    pretextgosub_label = NULL;
+    if (textgosub_label) {
+        delete[] textgosub_label;
+        textgosub_label = NULL;
+    }
+    if (pretextgosub_label) {
+        delete[] pretextgosub_label;
+        pretextgosub_label = NULL;
+    }
     pretext_buf = NULL;
     loadgosub_label = NULL;
     textgosub_clickstr_state = CLICK_NONE;

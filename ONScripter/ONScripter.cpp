@@ -174,8 +174,6 @@ int ONScripter::initSDL()
     screen_rect.x = screen_rect.y = 0;
     screen_rect.w = screen_width;
     screen_rect.h = screen_height;
-
-    coding2utf16->init();
     
     wm_title_string = new char[ strlen(DEFAULT_WM_TITLE) + 1 ];
     memcpy( wm_title_string, DEFAULT_WM_TITLE, strlen(DEFAULT_WM_TITLE) + 1 );
@@ -241,6 +239,22 @@ ONScripter::ONScripter()
     smpeg_info = NULL;
     current_button_state.down_flag = false;
     shoud_quit_loop = false;
+    
+#ifdef USE_SDL_RENDERER
+    window = NULL;
+    renderer = NULL;
+    texture = NULL;
+#endif
+    image_surface = NULL;
+    accumulation_surface = NULL;
+    backup_surface = NULL;
+    effect_src_surface = NULL;
+    effect_dst_surface = NULL;
+    screenshot_surface = NULL;
+    wm_title_string = NULL;
+    wm_icon_string = NULL;
+    resize_buffer_size = 0;
+    font_file = NULL;
 
     int i;
     for (i=0 ; i<MAX_SPRITE2_NUM ; i++)
@@ -262,6 +276,17 @@ ONScripter::~ONScripter()
 
     delete[] sprite_info;
     delete[] sprite2_info;
+    delete[] texture_info;
+    delete[] wm_title_string;
+    delete[] wm_icon_string;
+    if (resize_buffer_size > 0) {
+        delete[] resize_buffer;
+    }
+    delete[] font_file;
+    delete[] registry_file;
+    delete[] dll_file;
+    
+    freeSDLResources();
 }
 
 void ONScripter::enableCDAudio(){
@@ -652,6 +677,22 @@ void ONScripter::resetSentenceFont()
 
     sentence_font.old_xy[0] = sentence_font.x(false);
     sentence_font.old_xy[1] = sentence_font.y(false);
+}
+    
+void ONScripter::freeSDLResources()
+{
+    SDL_FreeSurface(image_surface);
+    SDL_FreeSurface(accumulation_surface);
+    SDL_FreeSurface(backup_surface);
+    SDL_FreeSurface(effect_src_surface);
+    SDL_FreeSurface(effect_dst_surface);
+    SDL_FreeSurface(screenshot_surface);
+    
+#ifdef USE_SDL_RENDERER
+    SDL_DestroyTexture(texture);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+#endif
 }
 
 void ONScripter::flush( int refresh_mode, SDL_Rect *rect, bool clear_dirty_flag, bool direct_flag )
@@ -1208,7 +1249,10 @@ void ONScripter::loadEnvData()
     volume_on_flag = true;
     text_speed_no = 1;
     skip_mode &= ~SKIP_TO_EOP;
-    default_env_font = NULL;
+    if (default_env_font) {
+        delete [] default_env_font;
+        default_env_font = NULL;
+    }
     cdaudio_on_flag = true;
     default_cdrom_drive = NULL;
     kidokumode_flag = true;

@@ -57,6 +57,7 @@ ScriptHandler::ScriptHandler()
     global_variable_border = 0;
     
     last_error_str = NULL;
+    archive_path = NULL;
 }
 
 ScriptHandler::~ScriptHandler()
@@ -71,6 +72,16 @@ ScriptHandler::~ScriptHandler()
     delete[] saved_string_buffer;
     if (variable_data) delete[] variable_data;
     if (last_error_str) delete[] last_error_str;
+    
+    if (num_of_labels > 0) {
+        for (int i = 0; i < num_of_labels; i++) {
+            delete[] label_info[i].name;
+        }
+        delete[] label_info;
+    }
+    if (cBR) delete cBR;
+    if (save_dir) delete[] save_dir;
+    if (archive_path) delete[] archive_path;
 }
 
 void ScriptHandler::reset()

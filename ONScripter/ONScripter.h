@@ -402,6 +402,7 @@ private:
     void reset(); // called on definereset
     void resetSub(); // called on reset
     void resetSentenceFont();
+    void freeSDLResources();
     void flush( int refresh_mode, SDL_Rect *rect=NULL, bool clear_dirty_flag=true, bool direct_flag=false );
     void flushDirect( SDL_Rect &rect, int refresh_mode );
 #if defined(USE_SMPEG) && defined(USE_SDL_RENDERER)
