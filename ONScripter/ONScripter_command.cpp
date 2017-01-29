@@ -2873,7 +2873,7 @@ int ONScripter::endCommand()
 {
     quit();
     stopSMPEG();
-    exit(0);
+    shoud_quit_loop = true;
     return RET_CONTINUE; // dummy
 }
 

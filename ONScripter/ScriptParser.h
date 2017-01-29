@@ -522,6 +522,8 @@ protected:
     unsigned char *key_table;
 
     void createKeyTable( const char *key_exe );
+    
+    char *last_error_str;
 };
 
 #endif // __SCRIPT_PARSER_H__

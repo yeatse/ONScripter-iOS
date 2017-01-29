@@ -184,8 +184,9 @@ void ONScripter::drawChar( char* text, FontInfo *info, bool flush_flag, bool loo
     if ( info->ttf_font[0] == NULL ){
         if ( info->openFont( font_file, screen_ratio1, screen_ratio2 ) == NULL ){
             fprintf( stderr, "can't open font file: %s\n", font_file );
+            if (!last_error_str) last_error_str = new char[512];
+            sprintf(last_error_str, "can't open font file: %s\n", font_file);
             quit();
-            exit(-1);
         }
     }
 #if defined(PSP)

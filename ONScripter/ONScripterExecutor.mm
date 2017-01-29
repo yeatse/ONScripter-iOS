@@ -125,10 +125,6 @@ FOUNDATION_STATIC_INLINE Coding2UTF16 *CoderFromEncoding(ONScripterEncoding enco
     return result == 0 ? ONSExecuteNoError : ONSExecuteRuntimeError;
 }
 
-- (void)quit {
-    
-}
-
 #pragma mark - Application event handling
 
 - (void)registerApplicationNotifications {

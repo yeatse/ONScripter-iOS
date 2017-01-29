@@ -38,14 +38,14 @@ extern "C" void waveCallback( int channel );
 #define DEFAULT_ENV_FONT "宋体"
 #define DEFAULT_AUTOMODE_TIME 1000
 
-void ONScripter::initSDL()
+int ONScripter::initSDL()
 {
     /* ---------------------------------------- */
     /* Initialize SDL */
 
     if ( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_AUDIO ) < 0 ){
         fprintf( stderr, "Couldn't initialize SDL: %s\n", SDL_GetError() );
-        exit(-1);
+        return -1;
     }
 
     atexit(SDL_Quit);
@@ -53,7 +53,7 @@ void ONScripter::initSDL()
 #ifdef USE_CDROM
     if( cdaudio_flag && SDL_InitSubSystem( SDL_INIT_CDROM ) < 0 ){
         fprintf( stderr, "Couldn't initialize CD-ROM: %s\n", SDL_GetError() );
-        exit(-1);
+        return -1;
     }
 #endif
 
@@ -70,7 +70,7 @@ void ONScripter::initSDL()
     /* Initialize SDL */
     if ( TTF_Init() < 0 ){
         fprintf( stderr, "can't initialize SDL TTF\n");
-        exit(-1);
+        return -1;
     }
 
 #if defined(BPP16)
@@ -86,7 +86,7 @@ void ONScripter::initSDL()
 #elif defined(PDA_AUTOSIZE)
     SDL_DisplayMode mode;
     if (SDL_GetDisplayMode(0, 0, &mode) < 0) {
-        exit(-1);
+        return -1;
     }
     int width;
     if (mode.w * screen_height > mode.h * screen_width)
@@ -165,7 +165,7 @@ void ONScripter::initSDL()
     if ( screen_surface == NULL ) {
         fprintf( stderr, "Couldn't set %dx%dx%d video mode: %s\n",
                  screen_width, screen_height, screen_bpp, SDL_GetError() );
-        exit(-1);
+        return -1;
     }
 #endif
     printf("Display: %d x %d (%d bpp)\n", screen_width, screen_height, screen_bpp);
@@ -182,6 +182,7 @@ void ONScripter::initSDL()
     wm_icon_string = new char[ strlen(DEFAULT_WM_ICON) + 1 ];
     memcpy( wm_icon_string, DEFAULT_WM_TITLE, strlen(DEFAULT_WM_ICON) + 1 );
     SDL_SetWindowTitle(window, wm_title_string);
+    return 0;
 }
 
 void ONScripter::openAudio(int freq)
@@ -239,6 +240,7 @@ ONScripter::ONScripter()
     texture_info = new AnimationInfo[MAX_TEXTURE_NUM];
     smpeg_info = NULL;
     current_button_state.down_flag = false;
+    shoud_quit_loop = false;
 
     int i;
     for (i=0 ; i<MAX_SPRITE2_NUM ; i++)
@@ -365,7 +367,9 @@ int ONScripter::openScript()
 
 int ONScripter::init()
 {
-    initSDL();
+    if (initSDL() != 0) {
+        return -1;
+    }
     openAudio();
 
     image_surface        = AnimationInfo::alloc32bitSurface( 1, 1, texture_format );
@@ -855,6 +859,12 @@ int ONScripter::executeLabel()
         if ( kidokuskip_flag && skip_mode & SKIP_NORMAL && kidokumode_flag && !script_h.isKidoku() ) skip_mode &= ~SKIP_NORMAL;
 
         int ret = parseLine();
+        if (shoud_quit_loop) {
+            return 0;
+        } else if (last_error_str || script_h.last_error_str) {
+            return -1;
+        }
+        
         if ( ret & (RET_SKIP_LINE | RET_EOL) ){
             if (ret & RET_SKIP_LINE) script_h.skipLine();
             if (++current_line >= current_label_info.num_of_lines) break;

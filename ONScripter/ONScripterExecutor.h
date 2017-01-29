@@ -43,8 +43,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (ONSExecuteErrorCode)executeWithConfiguration:(ONScripterConfiguration *)configuration;
 
-- (void)quit;
-
 @end
 
 NS_ASSUME_NONNULL_END

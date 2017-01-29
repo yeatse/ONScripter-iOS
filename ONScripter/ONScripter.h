@@ -397,7 +397,7 @@ private:
     NestInfo select_label_info;
     int  shortcut_mouse_line;
 
-    void initSDL();
+    int initSDL();
     void openAudio(int freq=-1);
     void reset(); // called on definereset
     void resetSub(); // called on reset
@@ -758,6 +758,7 @@ private:
     bool checkLineBreak(const char *buf, FontInfo *fi);
     void processEOT();
     bool processText();
+    bool shoud_quit_loop;
 };
 
 #endif // __ONSCRIPTER_H__

@@ -239,6 +239,7 @@ public:
     int global_variable_border;
 
     BaseReader *cBR;
+    char *last_error_str;
     
 private:
     enum { OP_INVALID = 0, // 000

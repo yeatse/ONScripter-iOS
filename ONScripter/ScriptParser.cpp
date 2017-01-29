@@ -73,6 +73,7 @@ ScriptParser::ScriptParser()
 
     render_font_outline = false;
     page_list = NULL;
+    last_error_str = NULL;
 
     /* ---------------------------------------- */
     /* Sound related variables */
@@ -102,6 +103,7 @@ ScriptParser::~ScriptParser()
     if (save_data_buf) delete[] save_data_buf;
 
     if (save_dir_envdata) delete[] save_dir_envdata;
+    if (last_error_str) delete[] last_error_str;
 }
 
 void ScriptParser::reset()
@@ -558,7 +560,8 @@ void ScriptParser::writeLog( ScriptHandler::LogInfo &info )
 
     if (saveFileIOBuf( info.filename )){
         fprintf( stderr, "can't write %s\n", info.filename );
-        exit( -1 );
+        if (!last_error_str) last_error_str = new char[512];
+        sprintf(last_error_str, "can't write %s\n", info.filename );
     }
 }
 
@@ -598,8 +601,12 @@ void ScriptParser::errorAndExit( const char *str, const char *reason )
              current_label_info.name,
              current_line,
              str, reason?reason:"" );
-#endif    
-    exit(-1);
+#endif
+    if (!last_error_str) last_error_str = new char[512];
+    sprintf(last_error_str, " *** Error at %s:%d [%s]; %s ***\n",
+            current_label_info.name,
+            current_line,
+            str, reason?reason:"" );
 }
 
 void ScriptParser::deleteNestInfo()
@@ -702,7 +709,8 @@ ScriptParser::EffectLink *ScriptParser::parseEffect(bool init_flag)
     }
 
     fprintf(stderr, "Effect No. %d is not found.\n", tmp_effect.effect);
-    exit(-1);
+    if (!last_error_str) last_error_str = new char[512];
+    sprintf(last_error_str, "Effect No. %d is not found.\n", tmp_effect.effect);
 
     return NULL;
 }

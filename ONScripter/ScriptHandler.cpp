@@ -55,6 +55,8 @@ ScriptHandler::ScriptHandler()
     screen_height = 480;
     variable_range = 0;
     global_variable_border = 0;
+    
+    last_error_str = NULL;
 }
 
 ScriptHandler::~ScriptHandler()
@@ -68,6 +70,7 @@ ScriptHandler::~ScriptHandler()
     delete[] str_string_buffer;
     delete[] saved_string_buffer;
     if (variable_data) delete[] variable_data;
+    if (last_error_str) delete[] last_error_str;
 }
 
 void ScriptHandler::reset()
@@ -924,7 +927,8 @@ void ScriptHandler::addStrAlias( const char *str1, const char *str2 )
 void ScriptHandler::errorAndExit( const char *str )
 {
     fprintf( stderr, " **** Script error, %s [%s] ***\n", str, string_buffer );
-    exit(-1);
+    if (!last_error_str) last_error_str = new char[512];
+    sprintf(last_error_str, " **** Script error, %s [%s] ***\n", str, string_buffer );
 }
 
 void ScriptHandler::addStringBuffer( char ch )
@@ -1387,7 +1391,8 @@ void ScriptHandler::parseStr( char **buf )
         }
         if ( !p_str_alias ){
             printf("can't find str alias for %s...\n", alias_buf );
-            exit(-1);
+            if (!last_error_str) last_error_str = new char[512];
+            sprintf(last_error_str, "can't find str alias for %s...\n", alias_buf );
         }
         current_variable.type |= VAR_CONST;
     }
